@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     private Character _player2;
     private Character _mainPlayer; // the one who get the direction
     private int _direction; // -1 left, 1 right
-    private bool _isProcessing = true; // false if the game is paused, true otherwise
+    public static bool isPaused = false; // false if the game is paused, true otherwise
 
     #endregion
 
@@ -44,13 +44,14 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        if(!_isProcessing) return;
+        if (Input.GetKeyDown(KeyCode.Escape)) PauseGame();
+        if(isPaused) return;
         UpdateLoop?.Invoke();
     }
 
     private void FixedUpdate()
     {
-        if(!_isProcessing) return;
+        if(isPaused) return;
         FixedUpdateLoop?.Invoke();
     }
 
@@ -64,6 +65,11 @@ public class GameManager : MonoBehaviour
         _direction = (_mainPlayer.Equals(_player1)) ? 1 : -1;
     }
 
+    public void PauseGame()
+    {
+        isPaused = !isPaused;
+        Time.timeScale = isPaused ? 0 : 1;
+    }
     #endregion
 
     
