@@ -6,8 +6,8 @@ public enum Thrust {NONE = 0, HIGH = 1, MEDIUM = 2, LOW = 3}
 public class PlayerController : AController
 {
     [SerializeField] private bool _isPlayerOne = true;
-    [HideInInspector] public bool _isProcessing = true; // false when the player is dead or if the game is paused.
-   protected override void ExecuteActions()
+    [HideInInspector] public bool _isProcessing = true; // false when the player is dead 
+   public override void ExecuteActions()
     {
         if(!_isProcessing) return;
         if (_isPlayerOne)
