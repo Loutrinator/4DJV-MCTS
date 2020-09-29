@@ -6,10 +6,10 @@ public enum Thrust {NONE = 0, HIGH = 1, MEDIUM = 2, LOW = 3}
 public class PlayerController : AController
 {
     [SerializeField] private bool _isPlayerOne = true;
-    [HideInInspector] public bool _isProcessing = true; // false when the player is dead 
+    [HideInInspector] public bool _isDead = true; // false when the player is dead 
    public override void ExecuteActions()
     {
-        if(!_isProcessing) return;
+        if( _isDead || GameManager.isPaused) return;
         if (_isPlayerOne)
         {
             _direction = Input.GetAxis("Horizontal");
