@@ -1,26 +1,11 @@
-﻿using System.Diagnostics.Tracing;
-using UnityEngine;
+﻿using UnityEngine;
 
-public enum Thrust {HIGH, MEDIUM, LOW, NONE}
+public enum Thrust {NONE = 0, HIGH = 1, MEDIUM = 2, LOW = 3}
 
 [RequireComponent(typeof(Character))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : AController
 {
-    private Character _character;
-    private float _direction;
-    private bool _isCrouching;
-    private bool _isJumping;
-    private bool _noSword;
-    private bool _throwSword;
-    private Thrust _thrust;
-
-    private void Awake()
-    {
-        _character = GetComponent<Character>();
-        _thrust = Thrust.NONE;
-    }
-
-    private void Update()
+   protected override void ExecuteActions()
     {
         _direction = Input.GetAxis("Horizontal");
         if (Input.GetButtonDown("Jump")){_isJumping = true;}
@@ -30,19 +15,5 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetButtonDown("Fire2")){_thrust = Thrust.MEDIUM;}
         else if (Input.GetButtonDown("Fire3")){_thrust = Thrust.LOW;}
         if (Input.GetButtonDown("Mouse X")){_throwSword = true;}
-    }
-
-    private void FixedUpdate()
-    {
-        _character.Move(_direction,_isCrouching,_isJumping);
-        _isJumping = false;
-        if (_throwSword)
-        {
-            _character.ThrowSword();
-            _noSword = true;
-        }
-        if(_noSword)  return;
-        _character.Thrusting(_thrust);
-        _thrust = Thrust.NONE;
     }
 }
