@@ -32,7 +32,6 @@ public class Character : MonoBehaviour
     [SerializeField] private float _jumpForce = 400f;
     [SerializeField] private float _speed = 10f;
     [Range(0, .3f)] [SerializeField] private float _movementSmoothing = .05f;
-    private float _direction; // 1 = right, -1 = left
     private Rigidbody2D _body;
     private Vector3 _velocity = Vector3.zero;
     private SpriteRenderer _renderer;

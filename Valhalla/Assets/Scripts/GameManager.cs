@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
+public enum PlayerType{none,player,random,mcts}
+
 public class GameManager : MonoBehaviour
 {
     #region fields
@@ -14,10 +16,18 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance => _instance;
     private static GameManager _instance;
 
-    private Character _player1;
-    private Character _player2;
-    private Character _mainPlayer; // the one who get the direction
-    private int _direction; // -1 left, 1 right
+    [SerializeField] private Character characterPrefab;
+    [SerializeField] private int _nbPlayers = 2; //In case one day the game can handle more than 2 players
+    public int NbPlayers {get { return _nbPlayers; }}
+    
+    private int advantage = 0;
+    private Character[] players;
+    public PlayerType[] playerTypes;
+    public Character MainPlayer {get{return advantage == 1 ? players[0] : advantage == 2 ? players[1] : null;}} // the one who get the direction
+
+    public Vector3[] spawnPoints;
+    
+    public int Direction{get{return advantage == 1 ? -1 : advantage == 2 ? 1 : 0;}}
     public static bool isPaused = false; // false if the game is paused, true otherwise
 
     #endregion
@@ -32,14 +42,19 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
         }
         else {Destroy(this);}
-
-        _player1 = GameObject.FindGameObjectWithTag("player1").GetComponent<Character>();
-        _player2 = GameObject.FindGameObjectWithTag("player2").GetComponent<Character>();
+        
+        players = new Character[_nbPlayers];// On set le nombre de joueurs
+        playerTypes = new PlayerType[_nbPlayers];
+        spawnPoints = new Vector3[_nbPlayers];
+        
+        /*for (int i = 0; i < players.Length; i++)
+        {
+            players[i] = GameObject.FindGameObjectWithTag("player" + (i+1)).GetComponent<Character>();
+        }*/
     }
 
     public void Start()
     {
-        InitGame();
     }
 
     public void Update()
@@ -59,10 +74,41 @@ public class GameManager : MonoBehaviour
 
     #region other function
 
-    private void InitGame()
+    public bool InitGame() //returns true if the game properly initialised
     {
-        _mainPlayer = (Random.Range(0, 2) > 0) ? _player1 : _player2;
-        _direction = (_mainPlayer.Equals(_player1)) ? 1 : -1;
+        if (players.Length != playerTypes.Length) return false;
+        
+        for(int i = 0; i < players.Length; ++i)
+        {
+            var position = (spawnPoints != null && (spawnPoints.Length == _nbPlayers)) ? spawnPoints[i] :Vector3.zero;
+            
+            players[i] = Instantiate(characterPrefab, position, Quaternion.identity);
+            players[i].tag = "player" + (i + 1);
+            players[i].name = "player" + (i + 1);
+            AController controller;
+            switch (playerTypes[i])
+            {
+                case PlayerType.player:
+                    controller = players[i].gameObject.AddComponent<PlayerController>();
+                    UpdateLoop.AddListener(controller.ExecuteActions);
+                    FixedUpdateLoop.AddListener(controller.CustomFixedUpdate);
+                    break;
+                case PlayerType.random:
+                    controller = players[i].gameObject.AddComponent<RandomController>();
+                    UpdateLoop.AddListener(controller.ExecuteActions);
+                    FixedUpdateLoop.AddListener(controller.CustomFixedUpdate);
+                    break;
+                case PlayerType.mcts:
+                    Debug.LogWarning("Warning : Attempting to initialise player " + (i+1) + " as a MCTS AI but MCTS is not currently implemented.");
+                    break;
+                case PlayerType.none:
+                    Debug.LogError("Error : Attempting to initialise player " + (i+1) + " as with no PlayerType.");
+                    return false;
+            }
+        }
+
+        return true;
+        //le jeu commence sans avoir d'avantage
     }
 
     public void PauseGame()

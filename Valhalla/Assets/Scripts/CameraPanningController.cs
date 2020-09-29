@@ -12,10 +12,6 @@ public class CameraPanningController : MonoBehaviour
 	[SerializeField] private float movingSpeed = 5f;
 	[SerializeField] private float cameraPrecision = 0.1f;
 	
-	public enum GameDirection {left,right}
-	
-	public GameDirection direction = GameDirection.left;
-	
 	private enum CameraState {idle,panning}
 	
 	private CameraState cameraState = CameraState.idle;
@@ -43,9 +39,9 @@ public class CameraPanningController : MonoBehaviour
 
     private void CheckTarget()
     {
-	    float sens = direction == GameDirection.right ? 1 : -1;
+	    float sens = GameManager.Instance.Direction;
 
-	    float diff = -sens*(target.position.x - this.transform.position.x + sens * cameraMovingDistance/2);
+	    float diff = -sens*(target.position.x - this.transform.position.x - sens * cameraMovingDistance/2);
 		
 	    if (diff < detectionRange)
 	    {
@@ -69,7 +65,7 @@ public class CameraPanningController : MonoBehaviour
 
     void StartMoveCamera()
 	{
-		float sens = direction == GameDirection.left ? 1 : -1;
+		float sens = GameManager.Instance.Direction;
 		targetPosition = this.transform.position + sens * cameraMovingDistance * Vector3.right;
 		cameraState = CameraState.panning;
 	}
