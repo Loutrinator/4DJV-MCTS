@@ -1,5 +1,9 @@
 fileFormatVersion: 2
-guid: f5a791db59d5ffa459beb55f0f008830
+<<<<<<< Updated upstream:Valhalla/Assets/Resources/Main Menu/Valhalla-logo-highres.png.meta
+guid: a80aca0bd62d72f47bcff158c36d9d35
+=======
+guid: 3ecd30721fee08c469845a1a9419a12d
+>>>>>>> Stashed changes:Valhalla/Assets/Resources/Stickmanswordsprites.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -31,7 +35,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: -1
     aniso: -1
     mipBias: -100
     wrapU: 1
@@ -61,18 +65,6 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 3
-    buildTarget: Standalone
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
