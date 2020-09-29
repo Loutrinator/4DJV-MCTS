@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Diagnostics.Tracing;
+using UnityEngine;
 
-public enum Thrust {HIGH, MEDIUM, LOW}
+public enum Thrust {HIGH, MEDIUM, LOW, NONE}
 
 [RequireComponent(typeof(Character))]
 public class PlayerController : MonoBehaviour
@@ -16,6 +17,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _character = GetComponent<Character>();
+        _thrust = Thrust.NONE;
     }
 
     private void Update()
@@ -41,5 +43,6 @@ public class PlayerController : MonoBehaviour
         }
         if(_noSword)  return;
         _character.Thrusting(_thrust);
+        _thrust = Thrust.NONE;
     }
 }

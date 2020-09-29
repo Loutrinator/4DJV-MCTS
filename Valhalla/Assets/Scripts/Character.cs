@@ -116,6 +116,7 @@ public class Character : MonoBehaviour
     {
         switch (height)
         {
+            case Thrust.NONE : break;
             case Thrust.HIGH : HighThrust(); break;
             case Thrust.MEDIUM : MediumThrust(); break;
             case Thrust.LOW : LowThrust(); break;
@@ -124,10 +125,28 @@ public class Character : MonoBehaviour
         }
     }
 
-    private void HighThrust(){}
-    private void MediumThrust(){}
-    private void LowThrust(){}
-    public void ThrowSword(){}
+    private void HighThrust()
+    {
+        _animator.SetTrigger(("highThrust"));
+    }
+
+    private void MediumThrust()
+    {
+        _animator.SetTrigger(("mediumThrust"));
+
+    }
+
+    private void LowThrust()
+    {
+        _animator.SetTrigger(("lowThrust"));
+
+    }
+
+    public void ThrowSword()
+    {
+        _animator.SetTrigger(("throwSword"));
+
+    }
 
     #endregion
     
