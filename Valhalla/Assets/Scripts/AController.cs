@@ -11,18 +11,15 @@ public abstract class AController : MonoBehaviour
     protected bool _throwSword = false;
     protected Thrust _thrust;
 
-    protected abstract void ExecuteActions();
+    public abstract void ExecuteActions();
 
     private void Awake()
     {
         _character = GetComponent<Character>();
         _thrust = Thrust.NONE;
     }
-    private void Update()
-    {
-        ExecuteActions();
-    }
-    private void FixedUpdate()
+ 
+    public void CustomFixedUpdate()
     {
         _character.Move(_direction,_isCrouching,_isJumping);
         _isJumping = false;

@@ -4,7 +4,7 @@ using UnityEngine;
 public class RandomController : AController
 {
     private int randomInt;
-    protected override void ExecuteActions()
+    public override void ExecuteActions()
     {
         StartCoroutine(ChooseAnAction());
         
