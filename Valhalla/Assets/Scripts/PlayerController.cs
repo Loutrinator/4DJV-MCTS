@@ -6,7 +6,6 @@ public enum Thrust {NONE = 0, HIGH = 1, MEDIUM = 2, LOW = 3}
 public class PlayerController : AController
 {
     [SerializeField] private bool _isPlayerOne = true;
-    [HideInInspector] public bool _isDead = true; // false when the player is dead 
    public override void ExecuteActions()
     {
         if( _isDead || GameManager.isPaused) return;
@@ -33,4 +32,6 @@ public class PlayerController : AController
          //   if (Input.GetButtonDown("Mouse X2")){_throwSword = true;}
         }
     }
+
+   
 }

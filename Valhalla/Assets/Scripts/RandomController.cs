@@ -12,6 +12,7 @@ public class RandomController : AController
 
     private IEnumerator ChooseAnAction()
     {
+        if(_isDead) yield return null;
         randomInt = Random.Range(0, 4);
         switch (randomInt)
         {
