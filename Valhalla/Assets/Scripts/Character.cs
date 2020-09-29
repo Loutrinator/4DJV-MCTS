@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -190,9 +191,14 @@ public class Character : MonoBehaviour
 
     }
 
-    public void TakeDamage()
+    private IEnumerator Respawn()
     {
-        Debug.Log(gameObject.name +  " Die");
+        _animator.SetBool("isDead",true);
+        yield return new WaitForSeconds(1);
+        transform.position = Vector3.zero;
+        // send a signal to the game manager who will give it his new position
+        _animator.SetBool("isDead",false);
+
     }
 
     private void TryAttack(Collider2D[] other)
@@ -202,7 +208,7 @@ public class Character : MonoBehaviour
             try
             {
                 if (o.gameObject.Equals(gameObject)) continue;
-                o.GetComponent<Character>().TakeDamage(); break;
+                StartCoroutine(o.GetComponent<Character>().Respawn()); break;
 
             }
             catch(NullReferenceException e){}
