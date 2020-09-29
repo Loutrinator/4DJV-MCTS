@@ -45,10 +45,8 @@ public class MainMenuManager : MonoBehaviour
             log += " VS " + playerTypes[i].ToString();
         }
 
-        if (GameManager.Instance.InitGame(playerTypes))
-        {
-            SceneManager.LoadScene(gameSceneIndex);
-        }
+        GameManager.Instance.playerTypes = playerTypes;
+        SceneManager.LoadScene(gameSceneIndex);
     }
 
     public void ShowGameConfigurationScreen()

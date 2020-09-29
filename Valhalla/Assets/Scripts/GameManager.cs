@@ -22,9 +22,10 @@ public class GameManager : MonoBehaviour
     
     private int advantage = 0;
     private Character[] players;
+    public PlayerType[] playerTypes;
     public Character MainPlayer {get{return advantage == 1 ? players[0] : advantage == 2 ? players[1] : null;}} // the one who get the direction
 
-    public Transform[] spawnPoints = new Transform[2];
+    public Vector3[] spawnPoints;
     
     public int Direction{get{return advantage == 1 ? -1 : advantage == 2 ? 1 : 0;}}
     public static bool isPaused = false; // false if the game is paused, true otherwise
@@ -43,10 +44,13 @@ public class GameManager : MonoBehaviour
         else {Destroy(this);}
         
         players = new Character[_nbPlayers];// On set le nombre de joueurs
-        for (int i = 0; i < players.Length; i++)
+        playerTypes = new PlayerType[_nbPlayers];
+        spawnPoints = new Vector3[_nbPlayers];
+        
+        /*for (int i = 0; i < players.Length; i++)
         {
             players[i] = GameObject.FindGameObjectWithTag("player" + (i+1)).GetComponent<Character>();
-        }
+        }*/
     }
 
     public void Start()
@@ -70,23 +74,29 @@ public class GameManager : MonoBehaviour
 
     #region other function
 
-    public bool InitGame(PlayerType[] playerTypes) //returns true if the game properly initialised
+    public bool InitGame() //returns true if the game properly initialised
     {
         if (players.Length != playerTypes.Length) return false;
         
         for(int i = 0; i < players.Length; ++i)
         {
-            players[i] = Instantiate(characterPrefab, spawnPoints[i].position, Quaternion.identity);
+            var position = (spawnPoints != null && (spawnPoints.Length == _nbPlayers)) ? spawnPoints[i] :Vector3.zero;
+            
+            players[i] = Instantiate(characterPrefab, position, Quaternion.identity);
             players[i].tag = "player" + (i + 1);
             players[i].name = "player" + (i + 1);
-            
+            AController controller;
             switch (playerTypes[i])
             {
                 case PlayerType.player:
-                    players[i].gameObject.AddComponent<PlayerController>();
+                    controller = players[i].gameObject.AddComponent<PlayerController>();
+                    UpdateLoop.AddListener(controller.ExecuteActions);
+                    FixedUpdateLoop.AddListener(controller.CustomFixedUpdate);
                     break;
                 case PlayerType.random:
-                    players[i].gameObject.AddComponent<PlayerController>();
+                    controller = players[i].gameObject.AddComponent<RandomController>();
+                    UpdateLoop.AddListener(controller.ExecuteActions);
+                    FixedUpdateLoop.AddListener(controller.CustomFixedUpdate);
                     break;
                 case PlayerType.mcts:
                     Debug.LogWarning("Warning : Attempting to initialise player " + (i+1) + " as a MCTS AI but MCTS is not currently implemented.");
