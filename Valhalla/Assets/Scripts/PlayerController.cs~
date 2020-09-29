@@ -12,11 +12,7 @@ public class PlayerController : AController
         if (_isPlayerOne)
         {
             _direction = Input.GetAxis("Horizontal");
-            if (Input.GetButtonDown("Jump"))
-            {
-                Debug.Log("Jump detected");
-                _isJumping = true;
-            }
+            if (Input.GetButtonDown("Jump")){_isJumping = true;}
             if (Input.GetButtonDown("Crouch")){_isCrouching = true;}
             else if (Input.GetButtonUp("Crouch")){_isCrouching = false;}
             if (Input.GetButtonDown("Fire1")){_thrust = Thrust.HIGH;}
