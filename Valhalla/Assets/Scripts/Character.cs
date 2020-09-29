@@ -192,7 +192,7 @@ public class Character : MonoBehaviour
 
     public void TakeDamage()
     {
-        Debug.Log("Die");
+        Debug.Log(gameObject.name +  " Die");
     }
 
     private void TryAttack(Collider2D[] other)
@@ -201,8 +201,9 @@ public class Character : MonoBehaviour
         {
             try
             {
-                o.GetComponent<Character>().TakeDamage();
-                break;
+                if (o.gameObject.Equals(gameObject)) continue;
+                o.GetComponent<Character>().TakeDamage(); break;
+
             }
             catch(NullReferenceException e){}
         }
