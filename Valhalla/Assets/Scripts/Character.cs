@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(SpriteRenderer))]
@@ -41,6 +42,9 @@ public class Character : MonoBehaviour
     [SerializeField] private Sprite _idle = null;
     [SerializeField] private Sprite _crouch = null;
     private Animator _animator;
+
+    [Header("Events")] [SerializeField] private UnityEvent OnDie;
+    [Header("Events")] [SerializeField] private UnityEvent OnRespawn;
     
     [Header("Debug")]
     [SerializeField] private bool _showDebug = true;
@@ -55,9 +59,6 @@ public class Character : MonoBehaviour
         _renderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         _flip = false;
-      //  _highThrustCollider.gameObject.SetActive(false);
-     ///   _mediumThrustCollider.gameObject.SetActive(false);
-     //   _lowThrustCollider.gameObject.SetActive(false);
     }
 
     private void FixedUpdate()
@@ -194,10 +195,12 @@ public class Character : MonoBehaviour
     private IEnumerator Respawn()
     {
         _animator.SetBool("isDead",true);
+        OnDie?.Invoke();
         yield return new WaitForSeconds(1);
         transform.position = Vector3.zero;
         // send a signal to the game manager who will give it his new position
         _animator.SetBool("isDead",false);
+        OnRespawn?.Invoke();
 
     }
 

@@ -10,6 +10,7 @@ public abstract class AController : MonoBehaviour
     protected bool _noSword;
     protected bool _throwSword = false;
     protected Thrust _thrust;
+    [HideInInspector] public bool _isDead = false; // false when the player is dead 
 
     public abstract void ExecuteActions();
 
@@ -21,6 +22,7 @@ public abstract class AController : MonoBehaviour
  
     public void CustomFixedUpdate()
     {
+        if(_isDead) return;
         _character.Move(_direction,_isCrouching,_isJumping);
         _isJumping = false;
         if (_throwSword)
@@ -31,5 +33,10 @@ public abstract class AController : MonoBehaviour
         if(_noSword)  return;
         _character.Thrusting(_thrust);
         _thrust = Thrust.NONE;
+    }
+    
+    public void changeAliveStatus()
+    {
+        _isDead = !_isDead;
     }
 }
