@@ -64,7 +64,7 @@ public class LevelManager : MonoBehaviour
         Vector3 spawnPoint = Vector3.zero;
         if (wrongSide)
         {
-            spawnPoint = wrongSideSpawnPoints[spawnId-sens];
+            spawnPoint = wrongSideSpawnPoints[spawnId];
             
         }
         else

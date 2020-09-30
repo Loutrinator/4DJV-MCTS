@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     [Header("Events")] 
     [SerializeField] private UnityEvent UpdateLoop;
     [SerializeField] private UnityEvent FixedUpdateLoop;
+    [SerializeField] private UnityEvent AILoop;
+    [SerializeField, Range(1,30)] private float AILoopFrequency = 5f;
 
     public static GameManager Instance => _instance;
     private static GameManager _instance;
@@ -57,6 +59,7 @@ public class GameManager : MonoBehaviour
         {
             players[i] = GameObject.FindGameObjectWithTag("player" + (i+1)).GetComponent<Character>();
         }*/
+        InvokeRepeating("CallAILoop",0f,1/AILoopFrequency);
     }
 
     public void Update()
@@ -70,6 +73,13 @@ public class GameManager : MonoBehaviour
     {
         if(IsPaused) return;
         FixedUpdateLoop?.Invoke();
+    }
+
+    private void CallAILoop()
+    {
+        if(IsPaused) return;
+        print("AI LOOP");
+        AILoop?.Invoke();
     }
 
     #endregion
@@ -102,7 +112,7 @@ public class GameManager : MonoBehaviour
                     break;
                 case PlayerType.random:
                     controller = players[i].gameObject.AddComponent<RandomController>();
-                    UpdateLoop.AddListener(controller.ExecuteActions);
+                    AILoop.AddListener(controller.ExecuteActions);
                     FixedUpdateLoop.AddListener(controller.CustomFixedUpdate);
                     break;
                 case PlayerType.mcts:
