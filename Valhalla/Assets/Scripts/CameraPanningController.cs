@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using UnityEngine;
+using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
 public class CameraPanningController : MonoBehaviour
@@ -43,7 +45,8 @@ public class CameraPanningController : MonoBehaviour
 	    Character player = GameManager.Instance.MainPlayer;
 	    if (player != null)
 	    {
-		    float diff = (player.transform.position.x - this.transform.position.x + sens * cameraMovingDistance/2);
+		    //Debug.Log("cam: " + this.transform.position.x + " offset: " + (sens * cameraMovingDistance/2) + " border: " + (this.transform.position.x + sens * cameraMovingDistance/2) + );
+		    float diff = -sens*((this.transform.position.x + sens * cameraMovingDistance/2) - player.transform.position.x);
 		
 		    if (diff < detectionRange)
 		    {
@@ -73,4 +76,22 @@ public class CameraPanningController : MonoBehaviour
 		targetPosition = this.transform.position + sens * cameraMovingDistance * Vector3.right;
 		cameraState = CameraState.panning;
 	}
+
+    public void OnDrawGizmos()
+    {
+	    float sens = GameManager.Instance.Direction;
+	    Gizmos.color = Color.blue;
+	    Vector3 pos = this.transform.position + Vector3.right * sens * cameraMovingDistance / 2;
+	    pos.z = 0;
+	    Vector3 a = pos;
+	    Vector3 b = pos;
+	    a.y = -5;
+	    b.y = 5;
+	    Gizmos.DrawLine(a,b);
+	    Gizmos.color = Color.yellow;
+	    a.x += sens * detectionRange;
+	    b.x += sens * detectionRange;
+	    Gizmos.DrawLine(a,b);
+
+    }
 }
