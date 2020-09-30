@@ -196,7 +196,10 @@ public class Character : MonoBehaviour
         _animator.SetBool("isDead",true);
         OnDie?.Invoke();
         yield return new WaitForSeconds(1);
+        gameObject.SetActive(false);
+        yield return new WaitForSeconds(5);
         transform.position = Vector3.zero;
+        gameObject.SetActive(true);
         // send a signal to the game manager who will give it his new position
         _animator.SetBool("isDead",false);
         OnRespawn?.Invoke();
