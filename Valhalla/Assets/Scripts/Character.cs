@@ -193,7 +193,7 @@ public class Character : MonoBehaviour
 
     }
 
-    private IEnumerator Respawn()
+    public IEnumerator Respawn()
     {
         _animator.SetBool("isDead",true);
         GameManager.Instance.PlayerDied(id);
