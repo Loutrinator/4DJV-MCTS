@@ -2323,7 +2323,7 @@ MonoBehaviour:
   mainLayout: {fileID: 1331554598}
   setupLayout: {fileID: 44632350}
   VSButton: {fileID: 614977983}
-  gameSceneIndex: 2
+  gameSceneIndex: 1
   playerTypes: 
 --- !u!4 &1188586789
 Transform:
@@ -3180,6 +3180,7 @@ MonoBehaviour:
   characterPrefab: {fileID: 1126249371141353877, guid: 69593956d356fc043abed428bab1a65e,
     type: 3}
   _nbPlayers: 2
+  players: []
   playerTypes: 
   spawnPoints:
   - {x: -2.4631018e+18, y: 5.56e-43, z: 1.487314e+20}
