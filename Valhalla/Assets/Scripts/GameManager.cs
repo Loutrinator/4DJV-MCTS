@@ -91,9 +91,11 @@ public class GameManager : MonoBehaviour
             switch (playerTypes[i])
             {
                 case PlayerType.player:
-                    controller = players[i].gameObject.AddComponent<PlayerController>();
+                    PlayerController playerController = players[i].gameObject.AddComponent<PlayerController>();
+                    controller = playerController;
                     UpdateLoop.AddListener(controller.ExecuteActions);
                     FixedUpdateLoop.AddListener(controller.CustomFixedUpdate);
+                    playerController.isPlayerOne = i == 0;
                     break;
                 case PlayerType.random:
                     controller = players[i].gameObject.AddComponent<RandomController>();

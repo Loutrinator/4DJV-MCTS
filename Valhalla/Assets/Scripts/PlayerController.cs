@@ -5,11 +5,11 @@ public enum Thrust {NONE = 0, HIGH = 1, MEDIUM = 2, LOW = 3}
 [RequireComponent(typeof(Character))]
 public class PlayerController : AController
 {
-    [SerializeField] private bool _isPlayerOne = true;
+    [SerializeField] public bool isPlayerOne = true;
    public override void ExecuteActions()
     {
         if( _isDead || GameManager.IsPaused) return;
-        if (_isPlayerOne)
+        if (isPlayerOne)
         {
             _direction = Input.GetAxis("Horizontal");
             if (Input.GetButtonDown("Jump")){_isJumping = true;}
