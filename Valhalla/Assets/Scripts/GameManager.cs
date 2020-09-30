@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
@@ -28,8 +29,11 @@ public class GameManager : MonoBehaviour
     public Vector3[] spawnPoints;
     
     public int Direction{get{return advantage == 1 ? -1 : advantage == 2 ? 1 : 0;}}
-    public static bool isPaused = false; // false if the game is paused, true otherwise
+    public static bool IsPaused = true; // TRUE if the game is paused, FALSE otherwise 
 
+    public AudioSource lowBeep;
+    public AudioSource highBeep;
+    
     #endregion
 
     #region Overriden functions
@@ -60,13 +64,13 @@ public class GameManager : MonoBehaviour
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape)) PauseGame();
-        if(isPaused) return;
+        if(IsPaused) return;
         UpdateLoop?.Invoke();
     }
 
     private void FixedUpdate()
     {
-        if(isPaused) return;
+        if(IsPaused) return;
         FixedUpdateLoop?.Invoke();
     }
 
@@ -76,6 +80,7 @@ public class GameManager : MonoBehaviour
 
     public bool InitGame() //returns true if the game properly initialised
     {
+        
         if (players.Length != playerTypes.Length) return false;
         
         for(int i = 0; i < players.Length; ++i)
@@ -85,6 +90,7 @@ public class GameManager : MonoBehaviour
             players[i] = Instantiate(characterPrefab, position, Quaternion.identity);
             players[i].tag = "player" + (i + 1);
             players[i].name = "player" + (i + 1);
+            players[i].id = (i + 1);
             AController controller;
             switch (playerTypes[i])
             {
@@ -106,15 +112,42 @@ public class GameManager : MonoBehaviour
                     return false;
             }
         }
-
+        
+        IsPaused = true;
+        
+        StartCoroutine(GameStart());
         return true;
         //le jeu commence sans avoir d'avantage
     }
 
+    IEnumerator GameStart()
+    {
+        float delay = 0.7f;
+        Debug.Log("GameStart");
+        lowBeep.Play();
+        yield return new WaitForSeconds(delay);
+        lowBeep.Play();
+        yield return new WaitForSeconds(delay);
+        lowBeep.Play();
+        yield return new WaitForSeconds(delay);
+        highBeep.Play();
+        IsPaused = false;
+    }
+    
     public void PauseGame()
     {
-        isPaused = !isPaused;
-        Time.timeScale = isPaused ? 0 : 1;
+        IsPaused = !IsPaused;
+        Time.timeScale = IsPaused ? 0 : 1;
+    }
+    public void PlayerDied(int id)
+    {
+        if (id == 1)
+        {
+            advantage = 2;
+        }else if (id == 2)
+        {
+            advantage = 1;
+        }
     }
     #endregion
 

@@ -22,7 +22,7 @@ public abstract class AController : MonoBehaviour
  
     public void CustomFixedUpdate()
     {
-        if(_isDead) return;
+        if(_isDead || GameManager.IsPaused) return;
         _character.Move(_direction,_isCrouching,_isJumping);
         _isJumping = false;
         if (_throwSword)

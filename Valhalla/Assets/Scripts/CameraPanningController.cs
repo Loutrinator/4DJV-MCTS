@@ -6,7 +6,6 @@ using Vector3 = UnityEngine.Vector3;
 
 public class CameraPanningController : MonoBehaviour
 {
-	[SerializeField] private Transform target;
 	[SerializeField] private float cameraMovingDistance = 18f;
 	[SerializeField] private float detectionRange = 1f;
 	[SerializeField] private float movingSpeed = 5f;
@@ -41,12 +40,17 @@ public class CameraPanningController : MonoBehaviour
     {
 	    float sens = GameManager.Instance.Direction;
 
-	    float diff = -sens*(target.position.x - this.transform.position.x - sens * cameraMovingDistance/2);
-		
-	    if (diff < detectionRange)
+	    Character player = GameManager.Instance.MainPlayer;
+	    if (player != null)
 	    {
-		    StartMoveCamera();
+		    float diff = (player.transform.position.x - this.transform.position.x + sens * cameraMovingDistance/2);
+		
+		    if (diff < detectionRange)
+		    {
+			    StartMoveCamera();
+		    }
 	    }
+	    
     }
 
     private void MoveCamera()
