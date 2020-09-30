@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     public int NbPlayers {get { return _nbPlayers; }}
     
     private int advantage = 0;
-    private Character[] players;
+    [HideInInspector] public Character[] players;
     public PlayerType[] playerTypes;
     public Character MainPlayer {get{return advantage == 1 ? players[0] : advantage == 2 ? players[1] : null;}} // the one who get the direction
 
@@ -146,6 +146,13 @@ public class GameManager : MonoBehaviour
         {
             advantage = 1;
         }
+    }
+
+    public void Win(Character winner)
+    {
+        Debug.Log(winner + " win !!");
+        PauseGame();
+        // display win screen or cutscene
     }
     #endregion
 
