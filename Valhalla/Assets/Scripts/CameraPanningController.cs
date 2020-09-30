@@ -6,15 +6,10 @@ using Vector3 = UnityEngine.Vector3;
 
 public class CameraPanningController : MonoBehaviour
 {
-	[SerializeField] private Transform target;
 	[SerializeField] private float cameraMovingDistance = 18f;
 	[SerializeField] private float detectionRange = 1f;
 	[SerializeField] private float movingSpeed = 5f;
 	[SerializeField] private float cameraPrecision = 0.1f;
-	
-	public enum GameDirection {left,right}
-	
-	public GameDirection direction = GameDirection.left;
 	
 	private enum CameraState {idle,panning}
 	
@@ -43,14 +38,19 @@ public class CameraPanningController : MonoBehaviour
 
     private void CheckTarget()
     {
-	    float sens = direction == GameDirection.right ? 1 : -1;
+	    float sens = GameManager.Instance.Direction;
 
-	    float diff = -sens*(target.position.x - this.transform.position.x + sens * cameraMovingDistance/2);
-		
-	    if (diff < detectionRange)
+	    Character player = GameManager.Instance.MainPlayer;
+	    if (player != null)
 	    {
-		    StartMoveCamera();
+		    float diff = (player.transform.position.x - this.transform.position.x + sens * cameraMovingDistance/2);
+		
+		    if (diff < detectionRange)
+		    {
+			    StartMoveCamera();
+		    }
 	    }
+	    
     }
 
     private void MoveCamera()
@@ -69,7 +69,7 @@ public class CameraPanningController : MonoBehaviour
 
     void StartMoveCamera()
 	{
-		float sens = direction == GameDirection.left ? 1 : -1;
+		float sens = GameManager.Instance.Direction;
 		targetPosition = this.transform.position + sens * cameraMovingDistance * Vector3.right;
 		cameraState = CameraState.panning;
 	}
