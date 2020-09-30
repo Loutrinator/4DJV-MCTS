@@ -57,10 +57,6 @@ public class GameManager : MonoBehaviour
         }*/
     }
 
-    public void Start()
-    {
-    }
-
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape)) PauseGame();
