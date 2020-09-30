@@ -18,14 +18,10 @@ public class CameraPanningController : MonoBehaviour
 	private CameraState cameraState = CameraState.idle;
 
 	private Vector3 targetPosition;
-		
-    // Start is called before the first frame update
-    void Start()
-    {
-	    
-    }
 
-    // Update is called once per frame
+	public int cameraScreenPosition = 0;
+
+	// Update is called once per frame
     void FixedUpdate()
     {
 	    if (cameraState == CameraState.idle)
@@ -75,6 +71,8 @@ public class CameraPanningController : MonoBehaviour
 		float sens = GameManager.Instance.Direction;
 		targetPosition = this.transform.position + sens * cameraMovingDistance * Vector3.right;
 		cameraState = CameraState.panning;
+		Debug.Log("StartMoveCamera");
+		cameraScreenPosition -= (int)sens;
 	}
 
     public void OnDrawGizmos()
