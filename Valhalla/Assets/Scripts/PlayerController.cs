@@ -8,7 +8,7 @@ public class PlayerController : AController
     [SerializeField] private bool _isPlayerOne = true;
    public override void ExecuteActions()
     {
-        if( _isDead || GameManager.isPaused) return;
+        if( _isDead || GameManager.IsPaused) return;
         if (_isPlayerOne)
         {
             _direction = Input.GetAxis("Horizontal");

@@ -47,7 +47,9 @@ public class Character : MonoBehaviour
     
     [Header("Debug")]
     [SerializeField] private bool _showDebug = true;
-   
+
+    public int id;
+    
     #endregion
 
     #region Overide functions
@@ -194,7 +196,9 @@ public class Character : MonoBehaviour
     private IEnumerator Respawn()
     {
         _animator.SetBool("isDead",true);
+        GameManager.Instance.PlayerDied(id);
         OnDie?.Invoke();
+        
         yield return new WaitForSeconds(1);
         gameObject.SetActive(false);
         yield return new WaitForSeconds(5);
