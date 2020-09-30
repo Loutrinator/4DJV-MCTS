@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
@@ -33,7 +34,8 @@ public class GameManager : MonoBehaviour
 
     public AudioSource lowBeep;
     public AudioSource highBeep;
-    
+
+    public LevelManager currentLevel;
     #endregion
 
     #region Overriden functions
@@ -74,8 +76,9 @@ public class GameManager : MonoBehaviour
 
     #region other function
 
-    public bool InitGame() //returns true if the game properly initialised
+    public bool InitGame(LevelManager level) //returns true if the game properly initialised
     {
+        currentLevel = level;
         
         if (players.Length != playerTypes.Length) return false;
         
