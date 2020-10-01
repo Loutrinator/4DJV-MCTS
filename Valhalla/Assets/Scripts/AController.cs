@@ -3,6 +3,7 @@
 
 public abstract class AController : MonoBehaviour
 {
+    public int id;
     protected Character _character;
     protected float _direction = 0;
     protected bool _isCrouching = false;
