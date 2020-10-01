@@ -7,7 +7,6 @@ public enum PlayerType{none,player,random,mcts}
 public class GameManager : MonoBehaviour
 {
     #region fields
-
     [Header("Events")] 
     [SerializeField] private UnityEvent UpdateLoop;
     [SerializeField] private UnityEvent FixedUpdateLoop;
@@ -34,6 +33,10 @@ public class GameManager : MonoBehaviour
     public AudioSource highBeep;
 
     public LevelManager currentLevel;
+
+    [HideInInspector] public Bounds[] WinZoneBounds;
+    [HideInInspector] public Vector3 characterColliderSize;
+
     #endregion
 
     #region Overriden functions
@@ -51,7 +54,8 @@ public class GameManager : MonoBehaviour
         _gameState.players = new PlayerData[_nbPlayers]; // same for player data inside game state
         playerTypes = new PlayerType[_nbPlayers];
         spawnPoints = new Vector3[_nbPlayers];
-        
+        characterColliderSize = players[0].GetComponent<BoxCollider2D>().size;
+
         /*for (int i = 0; i < _gameData.players.Length; i++)
         {
             _gameData.players[i] = GameObject.FindGameObjectWithTag("player" + (i+1)).GetComponent<Character>();
