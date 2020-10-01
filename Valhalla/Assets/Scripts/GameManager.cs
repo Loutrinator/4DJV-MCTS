@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
@@ -13,6 +14,8 @@ public class GameManager : MonoBehaviour
     [Header("Events")] 
     [SerializeField] private UnityEvent UpdateLoop;
     [SerializeField] private UnityEvent FixedUpdateLoop;
+    [SerializeField] private UnityEvent AILoop;
+    [SerializeField, Range(1,30)] private float AILoopFrequency = 5f;
 
     public static GameManager Instance => _instance;
     private static GameManager _instance;
@@ -33,7 +36,8 @@ public class GameManager : MonoBehaviour
 
     public AudioSource lowBeep;
     public AudioSource highBeep;
-    
+
+    public LevelManager currentLevel;
     #endregion
 
     #region Overriden functions
@@ -55,6 +59,7 @@ public class GameManager : MonoBehaviour
         {
             players[i] = GameObject.FindGameObjectWithTag("player" + (i+1)).GetComponent<Character>();
         }*/
+        InvokeRepeating("CallAILoop",0f,1/AILoopFrequency);
     }
 
     public void Update()
@@ -70,12 +75,20 @@ public class GameManager : MonoBehaviour
         FixedUpdateLoop?.Invoke();
     }
 
+    private void CallAILoop()
+    {
+        if(IsPaused) return;
+        print("AI LOOP");
+        AILoop?.Invoke();
+    }
+
     #endregion
 
     #region other function
 
-    public bool InitGame() //returns true if the game properly initialised
+    public bool InitGame(LevelManager level) //returns true if the game properly initialised
     {
+        currentLevel = level;
         
         if (players.Length != playerTypes.Length) return false;
         
@@ -99,7 +112,7 @@ public class GameManager : MonoBehaviour
                     break;
                 case PlayerType.random:
                     controller = players[i].gameObject.AddComponent<RandomController>();
-                    UpdateLoop.AddListener(controller.ExecuteActions);
+                    AILoop.AddListener(controller.ExecuteActions);
                     FixedUpdateLoop.AddListener(controller.CustomFixedUpdate);
                     break;
                 case PlayerType.mcts:

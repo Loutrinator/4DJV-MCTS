@@ -7,13 +7,8 @@ public class RandomController : AController
     public override void ExecuteActions()
     {
         
-        StartCoroutine(ChooseAnAction());
+        if(_isDead || GameManager.IsPaused)  return;
         
-    }
-
-    private IEnumerator ChooseAnAction()
-    {
-        if(_isDead || !GameManager.IsPaused) yield return null;
         randomInt = Random.Range(0, 4);
         switch (randomInt)
         {
@@ -32,7 +27,7 @@ public class RandomController : AController
             case 2:
             {
                 var r = Random.Range(0, 2) != 0;
-                _isCrouching = Random.Range(0, 2) != 0;
+                _isCrouching = r;
                 break;
             }
             case 3:
@@ -41,12 +36,8 @@ public class RandomController : AController
                 _thrust = (Thrust) r;
                 break;
             }
-            default: yield return new WaitForSeconds(10);break;
         }
-
-
     }
-
 }
     
 

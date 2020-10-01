@@ -199,15 +199,21 @@ public class Character : MonoBehaviour
         GameManager.Instance.PlayerDied(id);
         OnDie?.Invoke();
         
-        yield return new WaitForSeconds(1);
-        gameObject.SetActive(false);
-        yield return new WaitForSeconds(5);
-        transform.position = Vector3.zero;
-        gameObject.SetActive(true);
-        // send a signal to the game manager who will give it his new position
-        _animator.SetBool("isDead",false);
-        OnRespawn?.Invoke();
-
+        Vector3 position;
+        if (GameManager.Instance.currentLevel.GetSpawnPosition(out position))//si on est autorisé à spawn
+        {
+            yield return new WaitForSeconds(1f);
+            transform.position = position;
+            gameObject.SetActive(true);
+            // send a signal to the game manager who will give it his new position
+            _animator.SetBool("isDead",false);
+            OnRespawn?.Invoke();
+        }
+        else
+        {
+            yield return new WaitForSeconds(1f);
+            gameObject.SetActive(false);
+        }
     }
 
     private void TryAttack(Collider2D[] other)
@@ -227,7 +233,5 @@ public class Character : MonoBehaviour
     
 
     #endregion
-    
-
 
 }
