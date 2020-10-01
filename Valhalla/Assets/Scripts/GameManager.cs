@@ -16,22 +16,21 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UnityEvent FixedUpdateLoop;
     [SerializeField] private UnityEvent AILoop;
     [SerializeField, Range(1,30)] private float AILoopFrequency = 5f;
-
     public static GameManager Instance => _instance;
     private static GameManager _instance;
-
     [SerializeField] private Character characterPrefab;
-    [SerializeField] private int _nbPlayers = 2; //In case one day the game can handle more than 2 players
-    public int NbPlayers {get { return _nbPlayers; }}
     
-    private int advantage = 0;
-    [HideInInspector] public Character[] players;
+    [SerializeField] private int _nbPlayers = 2; //In case one day the game can handle more than 2 _gameData.players
+    public int NbPlayers {get { return _nbPlayers; }}
+
+    private GameState _gameState;
+    
     public PlayerType[] playerTypes;
-    public Character MainPlayer {get{return advantage == 1 ? players[0] : advantage == 2 ? players[1] : null;}} // the one who get the direction
+    public Character MainPlayer {get{return _gameState.advantage == 1 ? _gameState.players[0] : _gameState.advantage == 2 ? _gameState.players[1] : null;}} // the one who get the direction
 
     public Vector3[] spawnPoints;
     
-    public int Direction{get{return advantage == 1 ? -1 : advantage == 2 ? 1 : 0;}}
+    public int Direction{get{return _gameState.advantage == 1 ? -1 : _gameState.advantage == 2 ? 1 : 0;}}
     public static bool IsPaused = true; // TRUE if the game is paused, FALSE otherwise 
 
     public AudioSource lowBeep;
@@ -51,13 +50,13 @@ public class GameManager : MonoBehaviour
         }
         else {Destroy(this);}
         
-        players = new Character[_nbPlayers];// On set le nombre de joueurs
+        _gameState.players = new Character[_nbPlayers];// On set le nombre de joueurs
         playerTypes = new PlayerType[_nbPlayers];
         spawnPoints = new Vector3[_nbPlayers];
         
-        /*for (int i = 0; i < players.Length; i++)
+        /*for (int i = 0; i < _gameData.players.Length; i++)
         {
-            players[i] = GameObject.FindGameObjectWithTag("player" + (i+1)).GetComponent<Character>();
+            _gameData.players[i] = GameObject.FindGameObjectWithTag("player" + (i+1)).GetComponent<Character>();
         }*/
         InvokeRepeating("CallAILoop",0f,1/AILoopFrequency);
     }
@@ -90,28 +89,28 @@ public class GameManager : MonoBehaviour
     {
         currentLevel = level;
         
-        if (players.Length != playerTypes.Length) return false;
+        if (_gameState.players.Length != playerTypes.Length) return false;
         
-        for(int i = 0; i < players.Length; ++i)
+        for(int i = 0; i < _gameState.players.Length; ++i)
         {
             var position = (spawnPoints != null && (spawnPoints.Length == _nbPlayers)) ? spawnPoints[i] :Vector3.zero;
             
-            players[i] = Instantiate(characterPrefab, position, Quaternion.identity);
-            players[i].tag = "player" + (i + 1);
-            players[i].name = "player" + (i + 1);
-            players[i].id = (i + 1);
+            _gameState.players[i] = Instantiate(characterPrefab, position, Quaternion.identity);
+            _gameState.players[i].tag = "player" + (i + 1);
+            _gameState.players[i].name = "player" + (i + 1);
+            _gameState.players[i].id = (i + 1);
             AController controller;
             switch (playerTypes[i])
             {
                 case PlayerType.player:
-                    PlayerController playerController = players[i].gameObject.AddComponent<PlayerController>();
+                    PlayerController playerController = _gameState.players[i].gameObject.AddComponent<PlayerController>();
                     controller = playerController;
                     UpdateLoop.AddListener(controller.ExecuteActions);
                     FixedUpdateLoop.AddListener(controller.CustomFixedUpdate);
                     playerController.isPlayerOne = i == 0;
                     break;
                 case PlayerType.random:
-                    controller = players[i].gameObject.AddComponent<RandomController>();
+                    controller = _gameState.players[i].gameObject.AddComponent<RandomController>();
                     AILoop.AddListener(controller.ExecuteActions);
                     FixedUpdateLoop.AddListener(controller.CustomFixedUpdate);
                     break;
@@ -154,10 +153,10 @@ public class GameManager : MonoBehaviour
     {
         if (id == 1)
         {
-            advantage = 2;
+            _gameState.advantage = 2;
         }else if (id == 2)
         {
-            advantage = 1;
+            _gameState.advantage = 1;
         }
     }
 
@@ -166,6 +165,11 @@ public class GameManager : MonoBehaviour
         Debug.Log(winner + " win !!");
         PauseGame();
         // display win screen or cutscene
+    }
+
+    public GameState GetCurrentGameState()
+    {
+        return _gameState;
     }
     #endregion
 

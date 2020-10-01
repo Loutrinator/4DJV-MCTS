@@ -1,7 +1,9 @@
-namespace DefaultNamespace
+using UnityEngine;
+
+public struct PlayerData
 {
-    public class PlayerData
-    {
-        
-    }
+      public Vector3 position;
+      public Vector3 velocity;
+      public int id;
+      public bool isAlive;
 }

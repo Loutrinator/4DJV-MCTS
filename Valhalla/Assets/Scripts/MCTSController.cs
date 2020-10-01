@@ -38,14 +38,14 @@ public class MCTSController : AController {
 
     private int Simulate(MCTSTree node)
     {
-        /*while(!Game.isFinished()) //Attention votre jeu doit être finit !
+        GameSimulator.ResetSimulation(node.gameState);
+        while (GameSimulator.IsSimulationFinished())
         {
-            List<CharacterActionType> actions = Game.GetNextPossibleAction(node);
-            CharacterActionType selectedAction = Game.GetRandomAction(actions);
-            Game.PlayAction(selectedAction);
+            List<CharacterActionType> actions = GameSimulator.GetNextPossibleActions(node);
+            CharacterActionType selectedAction = GameSimulator.GetRandomAction(actions);
+            GameSimulator.PlayAction(selectedAction);
         }
-        return Game.Result(); //0 si perdu 1 si win*/
-        return 0;
+        return GameSimulator.GetResult(0);
     }
 
     

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public struct GameData
+public struct GameState
 {
     public Character[] players;
     public int advantage;
