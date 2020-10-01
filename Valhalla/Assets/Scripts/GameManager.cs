@@ -105,19 +105,25 @@ public class GameManager : MonoBehaviour
                     UpdateLoop.AddListener(controller.ExecuteActions);
                     FixedUpdateLoop.AddListener(controller.CustomFixedUpdate);
                     playerController.isPlayerOne = i == 0;
+                    controller.id = i + 1;
                     break;
                 case PlayerType.random:
                     controller = _gameState.players[i].gameObject.AddComponent<RandomController>();
                     AILoop.AddListener(controller.ExecuteActions);
                     FixedUpdateLoop.AddListener(controller.CustomFixedUpdate);
+                    controller.id = i + 1;
                     break;
                 case PlayerType.mcts:
-                    Debug.LogWarning("Warning : Attempting to initialise player " + (i+1) + " as a MCTS AI but MCTS is not currently implemented.");
+                    controller = _gameState.players[i].gameObject.AddComponent<MCTSController>();
+                    AILoop.AddListener(controller.ExecuteActions);
+                    FixedUpdateLoop.AddListener(controller.CustomFixedUpdate);
+                    controller.id = i + 1;
                     break;
                 case PlayerType.none:
                     Debug.LogError("Error : Attempting to initialise player " + (i+1) + " as with no PlayerType.");
                     return false;
             }
+
         }
         
         IsPaused = true;
