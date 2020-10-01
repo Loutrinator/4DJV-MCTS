@@ -21,7 +21,7 @@ public class MCTSTree
         children.Add(new MCTSTree(CharacterActionType.jump));
         children.Add(new MCTSTree(CharacterActionType.goLeft));
         children.Add(new MCTSTree(CharacterActionType.goRight));
-        children.Add(new MCTSTree(CharacterActionType.attackMiddle));
+        children.Add(new MCTSTree(CharacterActionType.attack));
         return children;
     }
     public void AddSimulationResult(int nbVictories, int nbSimulations)
