@@ -20,7 +20,13 @@ public class GameSimulator
     //Will return the next actions the AI can do (for example if he's in mid air he can't jump)
     public static List<CharacterActionType> GetNextPossibleActions(MCTSTree node)
     {
-        return new List<CharacterActionType>();
+        List<CharacterActionType> possibleActions = new List<CharacterActionType>();
+        possibleActions.Add(CharacterActionType.idle);
+        possibleActions.Add(CharacterActionType.jump);
+        possibleActions.Add(CharacterActionType.goLeft);
+        possibleActions.Add(CharacterActionType.goRight);
+        possibleActions.Add(CharacterActionType.attack);
+        return possibleActions;
     }
 
     //Returns a random Action
