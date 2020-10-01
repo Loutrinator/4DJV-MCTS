@@ -3,6 +3,7 @@ using System.Collections.Generic;
 public class MCTSTree
 {
     public CharacterActionType action;
+    public GameState gameState;
     private List<MCTSTree> children;
     private int nbVictories;
     private int nbSimulations;

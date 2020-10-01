@@ -10,9 +10,10 @@ public class WinZone : MonoBehaviour
     [SerializeField] private Zone playerAttached;
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.Equals(GameManager.Instance.players[(int) playerAttached].gameObject))
+        GameState gameState = GameManager.Instance.GetCurrentGameState();
+        if (other.gameObject.Equals(gameState.players[(int) playerAttached].gameObject))
         {
-            GameManager.Instance.Win(GameManager.Instance.players[(int) playerAttached]);
+            GameManager.Instance.Win(gameState.players[(int) playerAttached]);
         }
     }
 }
