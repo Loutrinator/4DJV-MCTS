@@ -14,7 +14,7 @@ public class GameSimulator
     //Returns true if one of the player won (or maybe after x simulations)
     public static bool IsSimulationFinished()
     {
-        return false;
+        return gameState.gameWon;
     }
 
     //Will return the next actions the AI can do (for example if he's in mid air he can't jump)
@@ -37,8 +37,16 @@ public class GameSimulator
     }
 
     //Return if the player won or not by giving it's id to identify if the result is on the point of view of the player 1 or player 2
-   public static int GetResult(int id)
-    {
-        return 0;
+   public static int GetResult(int currentAgentID)
+   {
+       if (gameState.advantage == 1 && gameState.gameWon && currentAgentID == 2)
+       {
+           return 1;
+       }
+       else if (gameState.advantage == -1 && gameState.gameWon && currentAgentID == 1)
+       {
+           return 1;
+       }
+       return 0;
     }
 }

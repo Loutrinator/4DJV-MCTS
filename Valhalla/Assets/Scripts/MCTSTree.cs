@@ -10,7 +10,7 @@ public class MCTSTree
 
     public MCTSTree(CharacterActionType action)
     {
-        action = CharacterActionType.idle;
+        this.action = action;
         nbVictories = 0;
         nbSimulations = 0;
         children = new List<MCTSTree>();

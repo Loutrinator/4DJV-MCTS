@@ -39,13 +39,13 @@ public class MCTSController : AController {
     private int Simulate(MCTSTree node)
     {
         GameSimulator.ResetSimulation(node.gameState);
-        while (GameSimulator.IsSimulationFinished())
+        while (!GameSimulator.IsSimulationFinished())
         {
             List<CharacterActionType> actions = GameSimulator.GetNextPossibleActions(node);
             CharacterActionType selectedAction = GameSimulator.GetRandomAction(actions);
             GameSimulator.PlayAction(selectedAction);
         }
-        return GameSimulator.GetResult(0);
+        return GameSimulator.GetResult(id);
     }
 
     
