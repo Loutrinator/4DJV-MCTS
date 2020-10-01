@@ -57,8 +57,7 @@ public class GameManager : MonoBehaviour
         _gameState.players = new PlayerData[_nbPlayers]; // same for player data inside game state
         playerTypes = new PlayerType[_nbPlayers];
         spawnPoints = new Vector3[_nbPlayers];
-        characterColliderSize = players[0].GetComponent<BoxCollider2D>().size;
-
+        WinZoneBounds = new Bounds[2];
         /*for (int i = 0; i < _gameData.players.Length; i++)
         {
             _gameData.players[i] = GameObject.FindGameObjectWithTag("player" + (i+1)).GetComponent<Character>();
@@ -103,7 +102,11 @@ public class GameManager : MonoBehaviour
             players[i] = Instantiate(characterPrefab, position, Quaternion.identity);
             players[i].tag = "player" + (i + 1);
             players[i].name = "player" + (i + 1);
+            _gameState.players[i]= new PlayerData();
             _gameState.players[i].id = (i + 1);
+            _gameState.players[i].position = players[i].transform.position;
+            _gameState.players[i].velocity = players[i].GetComponent<Rigidbody2D>().velocity;
+            _gameState.players[i].isAlive = true;
             AController controller;
             switch (playerTypes[i])
             {
@@ -135,7 +138,7 @@ public class GameManager : MonoBehaviour
         }
         
         IsPaused = true;
-        
+        characterColliderSize = players[0].GetComponent<BoxCollider2D>().size;
         StartCoroutine(GameStart());
         return true;
         //le jeu commence sans avoir d'avantage

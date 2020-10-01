@@ -16,10 +16,14 @@ public class MCTSController : AController {
     private MCTSTree MCTSComputeAction()
     {
         int max = int.MinValue;
-        MCTSTree bestAction = new MCTSTree(CharacterActionType.idle);
+        MCTSTree bestAction = new MCTSTree(CharacterActionType.idle, GameManager.Instance.GetCurrentGameState());
+        bestAction.action = CharacterActionType.idle;
+        currentNode = bestAction;   
         
         foreach(var action in currentNode.Expand()) //Expansion
         {
+            Debug.Log(action.gameState.players[0]);
+
             int numberVictory = 0;
             for (int i = 0; i < simulationAmountPerAction; ++i)
             {

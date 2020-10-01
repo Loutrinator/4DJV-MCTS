@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
+using Debug = System.Diagnostics.Debug;
 using Random = UnityEngine.Random;
 
 public class GameSimulator
@@ -15,6 +16,7 @@ public class GameSimulator
     {
         _gameState = newState;
         _currentID = id;
+        UnityEngine.Debug.Log(_gameState.players.Length);
         _currentPlayerData = _gameState.players[_currentID - 1];
     }
     //Returns true if one of the player won (or maybe after x simulations)
