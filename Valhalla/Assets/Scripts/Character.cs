@@ -28,9 +28,9 @@ public class Character : MonoBehaviour
     const float GROUND_RADIUS  = .2f;
     const float CEILING_RADIUS = .2f;
     
-    [Header("Movement")]
-    [SerializeField] private float _jumpForce = 400f;
-    [SerializeField] private float _speed = 10f;
+    [Header("Movement")] 
+    public static float jumpForce = 400f;
+    public static float speed = 10f;
     [Range(0, .3f)] [SerializeField] private float _movementSmoothing = .05f;
     private Rigidbody2D _body;
     private Vector3 _velocity = Vector3.zero;
@@ -99,7 +99,7 @@ public class Character : MonoBehaviour
     public void Move(float movement, bool isCrouching, bool isJumping)
     {
         if(_isDead) return;
-        Vector3 targetVelocity = new Vector2(movement * Time.deltaTime * _speed, _body.velocity.y);
+        Vector3 targetVelocity = new Vector2(movement * Time.deltaTime * speed, _body.velocity.y);
         _body.velocity = Vector3.SmoothDamp(_body.velocity, targetVelocity, ref _velocity, _movementSmoothing);
         _animator.SetBool("isRunning", movement!=0);
         if (movement > 0 && _flip) Flip();
@@ -112,7 +112,7 @@ public class Character : MonoBehaviour
     private void Jump()
     {
         if(!_isGrounded) return;
-        _body.AddForce(new Vector2(0f, _jumpForce));
+        _body.AddForce(new Vector2(0f, jumpForce));
         _animator.SetBool("isJumping", true);
         _isInTheAir = true;
     }

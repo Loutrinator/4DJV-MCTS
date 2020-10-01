@@ -8,11 +8,14 @@ public class GameSimulator
 {
     private static GameState _gameState;
     private static int _currentID; // ID of the current simulated player
+
+    private static PlayerData _currentPlayerData;
     //Resets the simulation in order to start a new one.
     public static void ResetSimulation(GameState newState, int id)
     {
         _gameState = newState;
         _currentID = id;
+        _currentPlayerData = _gameState.players[_currentID - 1];
     }
     //Returns true if one of the player won (or maybe after x simulations)
     public static bool IsSimulationFinished()
@@ -52,7 +55,8 @@ public class GameSimulator
             default: GameSimulator.SimulateIdle();break;
         }
 
-        checkWin();
+        CheckWin();
+        CheckSuicid();
     }
 
     //Return if the player won or not by giving it's id to identify if the result is on the point of view of the player 1 or player 2
@@ -72,33 +76,60 @@ public class GameSimulator
    private static void SimulateIdle()
    {
        _gameState.players[_currentID-1].velocity = Vector3.zero;
-       
    }
 
    private static void SimulateGoLeft()
    {
-       
+       _currentPlayerData.velocity = new Vector2(-1 * Character.speed, _currentPlayerData.velocity.y);
+       _currentPlayerData.position  = SimulatedPhysic.NextPosition(_currentPlayerData.position, _currentPlayerData.velocity);
    }
    private static void SimulateGoRight()
    {
-       
+       _currentPlayerData.velocity = new Vector2(1 * Character.speed, _currentPlayerData.velocity.y);
+       _currentPlayerData.position  = SimulatedPhysic.NextPosition(_currentPlayerData.position, _currentPlayerData.velocity);
    }
    private static void SimulateJump()
    {
+       _currentPlayerData.velocity = new Vector2(_currentPlayerData.velocity.x, Character.jumpForce);
+       _currentPlayerData.position  = SimulatedPhysic.NextPosition(_currentPlayerData.position, _currentPlayerData.velocity);
    }
 
    private static void SimulateAttack()
    {
-       
+       if (CheckKillOther())
+       {
+           _gameState.advantage = (_currentID == 1)?-1:1;
+       };
    }
 
-   private static void checkWin()
+   private static void CheckWin()
    {
        Bounds currentAgentBounds = new Bounds(_gameState.players[_currentID-1].position, GameManager.Instance.characterColliderSize );
        Bounds winZoneBoudBounds = GameManager.Instance.WinZoneBounds[_currentID-1];
-       bool intersect = ((Mathf.Abs(winZoneBoudBounds.min.x - currentAgentBounds.min.x) * 2) <(winZoneBoudBounds.size.x + currentAgentBounds.size.x))
-                        && ((Mathf.Abs(winZoneBoudBounds.min.y - currentAgentBounds.min.y) * 2) <(winZoneBoudBounds.size.y + currentAgentBounds.size.y));
-       _gameState.gameWon =  intersect;
+       _gameState.gameWon =  SimulatedPhysic.BoundsAreIntersecting(winZoneBoudBounds, currentAgentBounds);
+   }
+
+   private static bool CheckKillOther()
+   {
+       int otherID = (_currentID == 1) ? 2 : 1;
+       // have to change to have sword bounds and not player bounds
+       Bounds currentAgentSwordBounds = new Bounds(_gameState.players[_currentID-1].position, GameManager.Instance.characterColliderSize );
+       Bounds enemyAgentBounds = new Bounds(_gameState.players[otherID -1].position, GameManager.Instance.characterColliderSize );
+       if (SimulatedPhysic.BoundsAreIntersecting(currentAgentSwordBounds, enemyAgentBounds))
+       {
+           return true;
+       }
+
+       return false;
+   }
+
+   private static void CheckSuicid()
+   {
+       if (_currentPlayerData.position.y < GameManager.Instance.suicidY)
+       {
+           _currentPlayerData.isAlive = false;
+           _gameState.advantage = (_currentID == 1) ? 1 : -1;
+       }
    }
 
    

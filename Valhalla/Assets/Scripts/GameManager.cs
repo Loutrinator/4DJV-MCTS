@@ -7,6 +7,9 @@ public enum PlayerType{none,player,random,mcts}
 public class GameManager : MonoBehaviour
 {
     #region fields
+
+    [Header("Simulation parameters")]
+    public float suicidY = -50f;
     [Header("Events")] 
     [SerializeField] private UnityEvent UpdateLoop;
     [SerializeField] private UnityEvent FixedUpdateLoop;
@@ -36,7 +39,7 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public Bounds[] WinZoneBounds;
     [HideInInspector] public Vector3 characterColliderSize;
-
+    
     #endregion
 
     #region Overriden functions
