@@ -42,13 +42,15 @@ public class Character : MonoBehaviour
     [SerializeField] private Sprite _crouch = null;
     private Animator _animator;
 
-    [Header("Events")] [SerializeField] private UnityEvent OnDie;
-    [Header("Events")] [SerializeField] private UnityEvent OnRespawn;
+    [Header("Events")]
+    [SerializeField] private UnityEvent OnDie;
+    [SerializeField] private UnityEvent OnRespawn;
     
     [Header("Debug")]
     [SerializeField] private bool _showDebug = true;
 
     public int id;
+    private bool _isDead;
     
     #endregion
 
@@ -96,6 +98,7 @@ public class Character : MonoBehaviour
 
     public void Move(float movement, bool isCrouching, bool isJumping)
     {
+        if(_isDead) return;
         Vector3 targetVelocity = new Vector2(movement * Time.deltaTime * _speed, _body.velocity.y);
         _body.velocity = Vector3.SmoothDamp(_body.velocity, targetVelocity, ref _velocity, _movementSmoothing);
         _animator.SetBool("isRunning", movement!=0);
@@ -195,10 +198,13 @@ public class Character : MonoBehaviour
 
     public IEnumerator Respawn()
     {
+        _isDead = true;
         _animator.SetBool("isDead",true);
         GameManager.Instance.PlayerDied(id);
         OnDie?.Invoke();
-        
+        yield return new WaitForSeconds(1f);
+        gameObject.SetActive(false);
+
         Vector3 position;
         if (GameManager.Instance.currentLevel.GetSpawnPosition(out position))//si on est autorisé à spawn
         {
@@ -208,6 +214,7 @@ public class Character : MonoBehaviour
             // send a signal to the game manager who will give it his new position
             _animator.SetBool("isDead",false);
             OnRespawn?.Invoke();
+            _isDead = false;
         }
         else
         {
