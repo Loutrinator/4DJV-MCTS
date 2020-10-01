@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections;
-using JetBrains.Annotations;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
-using Random = UnityEngine.Random;
 
 public enum PlayerType{none,player,random,mcts}
 
