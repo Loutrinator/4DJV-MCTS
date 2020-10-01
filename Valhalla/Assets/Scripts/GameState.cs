@@ -2,7 +2,7 @@ using UnityEngine;
 
 public struct GameState
 {
-    public Character[] players;
+    public PlayerData[] players;
     public int advantage;
     public bool gameWon;
 }

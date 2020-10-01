@@ -23,8 +23,8 @@ public class GameManager : MonoBehaviour
     private GameState _gameState;
     
     public PlayerType[] playerTypes;
-    public Character MainPlayer {get{return _gameState.advantage == 1 ? _gameState.players[0] : _gameState.advantage == 2 ? _gameState.players[1] : null;}} // the one who get the direction
-
+    [HideInInspector] public Character[] players;
+    public Character MainPlayer {get{return _gameState.advantage == 1 ? players[0] : _gameState.advantage == 2 ? players[1] : null;}} // the one who get the direction
     public Vector3[] spawnPoints;
     
     public int Direction{get{return _gameState.advantage == 1 ? -1 : _gameState.advantage == 2 ? 1 : 0;}}
@@ -47,7 +47,8 @@ public class GameManager : MonoBehaviour
         }
         else {Destroy(this);}
         
-        _gameState.players = new Character[_nbPlayers];// On set le nombre de joueurs
+        players = new Character[_nbPlayers];// set number of player
+        _gameState.players = new PlayerData[_nbPlayers]; // same for player data inside game state
         playerTypes = new PlayerType[_nbPlayers];
         spawnPoints = new Vector3[_nbPlayers];
         
@@ -92,15 +93,15 @@ public class GameManager : MonoBehaviour
         {
             var position = (spawnPoints != null && (spawnPoints.Length == _nbPlayers)) ? spawnPoints[i] :Vector3.zero;
             
-            _gameState.players[i] = Instantiate(characterPrefab, position, Quaternion.identity);
-            _gameState.players[i].tag = "player" + (i + 1);
-            _gameState.players[i].name = "player" + (i + 1);
+            players[i] = Instantiate(characterPrefab, position, Quaternion.identity);
+            players[i].tag = "player" + (i + 1);
+            players[i].name = "player" + (i + 1);
             _gameState.players[i].id = (i + 1);
             AController controller;
             switch (playerTypes[i])
             {
                 case PlayerType.player:
-                    PlayerController playerController = _gameState.players[i].gameObject.AddComponent<PlayerController>();
+                    PlayerController playerController = players[i].gameObject.AddComponent<PlayerController>();
                     controller = playerController;
                     UpdateLoop.AddListener(controller.ExecuteActions);
                     FixedUpdateLoop.AddListener(controller.CustomFixedUpdate);
@@ -108,13 +109,13 @@ public class GameManager : MonoBehaviour
                     controller.id = i + 1;
                     break;
                 case PlayerType.random:
-                    controller = _gameState.players[i].gameObject.AddComponent<RandomController>();
+                    controller = players[i].gameObject.AddComponent<RandomController>();
                     AILoop.AddListener(controller.ExecuteActions);
                     FixedUpdateLoop.AddListener(controller.CustomFixedUpdate);
                     controller.id = i + 1;
                     break;
                 case PlayerType.mcts:
-                    controller = _gameState.players[i].gameObject.AddComponent<MCTSController>();
+                    controller = players[i].gameObject.AddComponent<MCTSController>();
                     AILoop.AddListener(controller.ExecuteActions);
                     FixedUpdateLoop.AddListener(controller.CustomFixedUpdate);
                     controller.id = i + 1;
