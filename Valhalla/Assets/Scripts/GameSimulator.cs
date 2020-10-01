@@ -75,7 +75,7 @@ public class GameSimulator
 
    private static void SimulateIdle()
    {
-       _gameState.players[_currentID-1].velocity = Vector3.zero;
+       _currentPlayerData.velocity = Vector3.zero;
    }
 
    private static void SimulateGoLeft()
@@ -104,7 +104,7 @@ public class GameSimulator
 
    private static void CheckWin()
    {
-       Bounds currentAgentBounds = new Bounds(_gameState.players[_currentID-1].position, GameManager.Instance.characterColliderSize );
+       Bounds currentAgentBounds = new Bounds(_currentPlayerData.position, GameManager.Instance.characterColliderSize );
        Bounds winZoneBoudBounds = GameManager.Instance.WinZoneBounds[_currentID-1];
        _gameState.gameWon =  SimulatedPhysic.BoundsAreIntersecting(winZoneBoudBounds, currentAgentBounds);
    }
@@ -113,7 +113,7 @@ public class GameSimulator
    {
        int otherID = (_currentID == 1) ? 2 : 1;
        // have to change to have sword bounds and not player bounds
-       Bounds currentAgentSwordBounds = new Bounds(_gameState.players[_currentID-1].position, GameManager.Instance.characterColliderSize );
+       Bounds currentAgentSwordBounds = new Bounds(_currentPlayerData.position, GameManager.Instance.characterColliderSize );
        Bounds enemyAgentBounds = new Bounds(_gameState.players[otherID -1].position, GameManager.Instance.characterColliderSize );
        if (SimulatedPhysic.BoundsAreIntersecting(currentAgentSwordBounds, enemyAgentBounds))
        {
