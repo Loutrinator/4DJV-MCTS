@@ -250,7 +250,7 @@ MonoBehaviour:
   _standingCollider: {fileID: 1126249371141353875}
   _isInTheAir: 0
   _jumpForce: 800
-  _speed: 500
+  _speed: 5
   _movementSmoothing: 0.05
   OnDie:
     m_PersistentCalls:

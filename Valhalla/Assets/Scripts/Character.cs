@@ -98,9 +98,11 @@ public class Character : MonoBehaviour
         if(_isDead) return;
 //        Vector3 targetVelocity = new Vector2(movement * Time.deltaTime * _speed, _body.velocity.y);
   //      _body.velocity = Vector3.SmoothDamp(_body.velocity, targetVelocity, ref _velocity, _movementSmoothing);
-         _velocity = SimulatedPhysic.MoveTo(transform.position, new Vector2(movement * _speed, _velocity.y));
+         _acceleration.x = _speed*movement*SimulatedPhysic.deltaTime;
+         // -- movement equation --------------------------------    
          _velocity += _acceleration;
-         transform.position += (_velocity + .5f * _acceleration);
+         transform.position += (_velocity*SimulatedPhysic.deltaTime + .5f * _acceleration);
+         // -----------------------------------------------------
         _animator.SetBool("isRunning", movement!=0);
         if (movement > 0 && _flip) Flip();
         else if (movement < 0 && !_flip) Flip();
