@@ -80,7 +80,7 @@ GameObject:
   - component: {fileID: 473856072870039526}
   - component: {fileID: 7479873410079154375}
   m_Layer: 8
-  m_Name: player1
+  m_Name: BasePlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -247,7 +247,7 @@ MonoBehaviour:
   _seekCeiling: {fileID: 1126249369953177690}
   _seekAttackCollision: {fileID: 4828344220527167646}
   _swordColliderRange: {x: 1, y: 0.1}
-  _standingCollider: {fileID: 0}
+  _standingCollider: {fileID: 1126249371141353875}
   _isInTheAir: 0
   _jumpForce: 800
   _speed: 500
