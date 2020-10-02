@@ -76,12 +76,12 @@ PrefabInstance:
     - target: {fileID: 1126249371141353879, guid: 9b99e34be5519fc4abf8609c4ce658e3,
         type: 3}
       propertyPath: m_FlipX
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8412684836776238712, guid: 9b99e34be5519fc4abf8609c4ce658e3,
         type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 2524d0e0e9486bc41b038eb57219b976, type: 2}
+      objectReference: {fileID: 9100000, guid: 7a9b1dff2f07d4048b3af4aabf638d5f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b99e34be5519fc4abf8609c4ce658e3, type: 3}
