@@ -9,6 +9,14 @@ using UnityEngine.Events;
 public class Character : MonoBehaviour
 {
     #region Fields
+
+    [Header("Sounds FX")] 
+    [SerializeField] private AudioSource _footstepSFX = null;
+    [SerializeField] private AudioSource _jumpSFX = null;
+    [SerializeField] private AudioSource _crouchSFX = null;
+    [SerializeField] private AudioSource _thrustSFX = null;
+    [SerializeField] private AudioSource _hurtSFX = null;
+
     [Header("Collision")]
     [SerializeField] private LayerMask _groundLayer;
     [SerializeField] private LayerMask _playerLayer;
@@ -34,7 +42,6 @@ public class Character : MonoBehaviour
     [Range(0, .3f)] [SerializeField] private float _movementSmoothing = .05f;
     private Rigidbody2D _body;
     private Vector3 _velocity = Vector3.zero;
-    private SpriteRenderer _renderer;
     private bool _flip;
     
     [Header("Stance")]
@@ -59,7 +66,6 @@ public class Character : MonoBehaviour
     private void Awake()
     {
         _body = GetComponent<Rigidbody2D>();
-        _renderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         _flip = false;
     }
@@ -115,6 +121,7 @@ public class Character : MonoBehaviour
         _body.AddForce(new Vector2(0f, _jumpForce));
         _animator.SetBool("isJumping", true);
         _isInTheAir = true;
+        _jumpSFX.Play();
     }
 
     private void Flip()
@@ -125,6 +132,7 @@ public class Character : MonoBehaviour
 
     private void Stance(bool isCrouching)
     {
+
         if (Physics2D.OverlapCircle(_seekCeiling.position, CEILING_RADIUS, _groundLayer))
         {
             isCrouching = true;
@@ -202,6 +210,7 @@ public class Character : MonoBehaviour
         _animator.SetBool("isDead",true);
         GameManager.Instance.PlayerDied(id);
         OnDie?.Invoke();
+        if(_isDead) _hurtSFX.Play();
         yield return new WaitForSeconds(1f);
         gameObject.SetActive(false);
 
@@ -225,6 +234,7 @@ public class Character : MonoBehaviour
 
     private void TryAttack(Collider2D[] other)
     {
+        _thrustSFX.Play();
         foreach (Collider2D o in other)
         {
             try
@@ -241,4 +251,14 @@ public class Character : MonoBehaviour
 
     #endregion
 
+    private void PlayFootstep()
+    {
+        _footstepSFX.Play();
+    }
+
+    private void PlayCrouch()
+    {
+     //   if(!_crouchSFX.isPlaying) _crouchSFX.Play();
+    }
+  
 }
