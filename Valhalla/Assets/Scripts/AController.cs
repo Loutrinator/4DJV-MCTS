@@ -5,12 +5,12 @@ public abstract class AController : MonoBehaviour
 {
     public int id;
     protected Character _character;
-    protected float _direction = 0;
-    protected bool _isCrouching = false;
-    protected bool _isJumping;
-    protected bool _noSword;
+    [SerializeField]protected float _direction = 0;
+    [SerializeField]protected bool _isCrouching = false;
+    [SerializeField]protected bool _isJumping;
+    [SerializeField]protected bool _noSword;
     protected bool _throwSword = false;
-    protected Thrust _thrust;
+    [SerializeField]protected bool _attack;
     [HideInInspector] public bool _isDead = false; // false when the player is dead 
 
     public abstract void ExecuteActions();
@@ -18,7 +18,7 @@ public abstract class AController : MonoBehaviour
     private void Awake()
     {
         _character = GetComponent<Character>();
-        _thrust = Thrust.NONE;
+        _attack = false;
     }
  
     public void CustomFixedUpdate()
@@ -32,8 +32,8 @@ public abstract class AController : MonoBehaviour
             _noSword = true;
         }
         if(_noSword)  return;
-        _character.Thrusting(_thrust);
-        _thrust = Thrust.NONE;
+        if(_attack) _character.Attack();
+        _attack = false;
     }
     
     public void changeAliveStatus()

@@ -22,17 +22,13 @@ public class Character : MonoBehaviour
     [SerializeField] private LayerMask _playerLayer;
     [SerializeField] private Transform _seekGround = null;
     [SerializeField] private Transform _seekCeiling = null;
-    [SerializeField] private Transform _seekHighThrustCollision = null;
-    [SerializeField] private Transform _seekMediumThrustCollision = null;
-    [SerializeField] private Transform _seekLowThrustCollision = null;
+    [SerializeField] private Transform _seekAttackCollision = null;
     [SerializeField] private Vector2 _swordColliderRange = Vector2.one;
     [SerializeField] private Collider2D _standingCollider = null;
     private bool _isGrounded;
     private bool _isCeilingColliding;
-    private bool _isHThrustCollidingAnotherPlayer;
-    private bool _isMThrustCollidingAnotherPlayer;
-    private bool _isLThrustCollidingAnotherPlayer;
-    private bool _isInTheAir;
+    private bool _isAttackCollidingAnotherPlayer;
+    [SerializeField] private bool _isInTheAir;
     const float GROUND_RADIUS  = .2f;
     const float CEILING_RADIUS = .2f;
     
@@ -44,9 +40,7 @@ public class Character : MonoBehaviour
     private Vector3 _velocity = Vector3.zero;
     private bool _flip;
     
-    [Header("Stance")]
-    [SerializeField] private Sprite _idle = null;
-    [SerializeField] private Sprite _crouch = null;
+    [Header("Animation")]
     private Animator _animator;
 
     [Header("Events")]
@@ -75,9 +69,10 @@ public class Character : MonoBehaviour
         Collider2D[] colliders = Physics2D.OverlapCircleAll(_seekGround.position, GROUND_RADIUS, _groundLayer);
         _isGrounded = colliders.Length > 0;
 
-        if (!_isInTheAir || !_isGrounded) return;
+        if (!_isInTheAir || _isGrounded) return;
         _isInTheAir = false;
         _animator.SetBool("isJumping", false);
+
     }
 
     private void OnDrawGizmos()
@@ -87,14 +82,8 @@ public class Character : MonoBehaviour
         Gizmos.DrawWireSphere(_seekGround.position, GROUND_RADIUS);
         Gizmos.color = _isCeilingColliding ? Color.red : Color.yellow;
         Gizmos.DrawWireSphere(_seekCeiling.position, CEILING_RADIUS);
-        Gizmos.color = _isHThrustCollidingAnotherPlayer ? Color.red : Color.yellow;
-        Gizmos.DrawWireCube(new Vector3(_seekHighThrustCollision.position.x,_seekHighThrustCollision.position.y,0 ),
-                                                _swordColliderRange);
-        Gizmos.color = _isMThrustCollidingAnotherPlayer ? Color.red : Color.yellow;
-        Gizmos.DrawWireCube(new Vector3(_seekMediumThrustCollision.position.x,_seekMediumThrustCollision.position.y,0 ),
-                                                _swordColliderRange);
-        Gizmos.color = _isLThrustCollidingAnotherPlayer ? Color.red : Color.yellow;
-        Gizmos.DrawWireCube(new Vector3(_seekLowThrustCollision.position.x,_seekLowThrustCollision.position.y,0 ),
+        Gizmos.color = _isAttackCollidingAnotherPlayer ? Color.red : Color.yellow;
+        Gizmos.DrawWireCube(new Vector3(_seekAttackCollision.position.x,_seekAttackCollision.position.y,0 ),
                                                 _swordColliderRange);
     }
 
@@ -104,13 +93,14 @@ public class Character : MonoBehaviour
 
     public void Move(float movement, bool isCrouching, bool isJumping)
     {
+        Debug.Log("isJumping : " + isJumping);
         if(_isDead) return;
         Vector3 targetVelocity = new Vector2(movement * Time.deltaTime * _speed, _body.velocity.y);
         _body.velocity = Vector3.SmoothDamp(_body.velocity, targetVelocity, ref _velocity, _movementSmoothing);
         _animator.SetBool("isRunning", movement!=0);
         if (movement > 0 && _flip) Flip();
         else if (movement < 0 && !_flip) Flip();
-        Stance(isCrouching);
+        Crouch(isCrouching);
         if (isJumping) Jump();
 
     }
@@ -118,6 +108,7 @@ public class Character : MonoBehaviour
     private void Jump()
     {
         if(!_isGrounded) return;
+        Debug.Log("Jump");
         _body.AddForce(new Vector2(0f, _jumpForce));
         _animator.SetBool("isJumping", true);
         _isInTheAir = true;
@@ -130,7 +121,7 @@ public class Character : MonoBehaviour
         transform.localScale = new Vector3(-1*transform.localScale.x,transform.localScale.y,transform.localScale.z);
     }
 
-    private void Stance(bool isCrouching)
+    private void Crouch(bool isCrouching)
     {
 
         if (Physics2D.OverlapCircle(_seekCeiling.position, CEILING_RADIUS, _groundLayer))
@@ -146,31 +137,36 @@ public class Character : MonoBehaviour
 
     #region Attack
 
-    public void Thrusting(Thrust height)
+    public void Attack()
     {
-        switch (height)
-        {
-            case Thrust.NONE : break;
-            case Thrust.HIGH:
-            {
-                HighThrust();
-                break;
-            }
-            case Thrust.MEDIUM:
-            {
-                MediumThrust();
-                break;
-            }
-            case Thrust.LOW:
-            {
-                LowThrust();
-                break;
-            }
-            default:
-                throw new ArgumentOutOfRangeException(nameof(height), height, height + " isn't defined in Thrust enum.");
-        }
+        _animator.SetTrigger(("attack"));
+        Collider2D[] other = Physics2D.OverlapBoxAll(_seekAttackCollision.position, _swordColliderRange, _playerLayer);
+        _isAttackCollidingAnotherPlayer = other.Length > 0;
+        if (_isAttackCollidingAnotherPlayer) TryAttack(other);
+        
+        // switch (height)
+        // {
+        //     case Thrust.NONE : break;
+        //     case Thrust.HIGH:
+        //     {
+        //         HighThrust();
+        //         break;
+        //     }
+        //     case Thrust.MEDIUM:
+        //     {
+        //         MediumThrust();
+        //         break;
+        //     }
+        //     case Thrust.LOW:
+        //     {
+        //         LowThrust();
+        //         break;
+        //     }
+        //     default:
+        //         throw new ArgumentOutOfRangeException(nameof(height), height, height + " isn't defined in Thrust enum.");
+        // }
     }
-
+/*
     private void HighThrust()
     {
         _animator.SetTrigger(("highThrust"));
@@ -196,7 +192,7 @@ public class Character : MonoBehaviour
         _isLThrustCollidingAnotherPlayer = other.Length > 0;
         if (_isLThrustCollidingAnotherPlayer) TryAttack(other);
 
-    }
+    }*/
 
     public void ThrowSword()
     {
@@ -245,7 +241,7 @@ public class Character : MonoBehaviour
             }
             catch(NullReferenceException e){}
         }
-        _isHThrustCollidingAnotherPlayer = _isMThrustCollidingAnotherPlayer = _isLThrustCollidingAnotherPlayer = false;
+        _isAttackCollidingAnotherPlayer = false;
     }
     
 

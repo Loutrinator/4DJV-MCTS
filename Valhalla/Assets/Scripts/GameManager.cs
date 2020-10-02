@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField, Range(1,30)] private float AILoopFrequency = 5f;
     public static GameManager Instance => _instance;
     private static GameManager _instance;
-    [SerializeField] private Character characterPrefab;
+    [SerializeField] private Character[] characterPrefabs = new Character[2];
     
     [SerializeField] private int _nbPlayers = 2; //In case one day the game can handle more than 2 _gameData.players
     public int NbPlayers {get { return _nbPlayers; }}
@@ -92,7 +92,7 @@ public class GameManager : MonoBehaviour
         {
             var position = (spawnPoints != null && (spawnPoints.Length == _nbPlayers)) ? spawnPoints[i] :Vector3.zero;
             
-            _gameState.players[i] = Instantiate(characterPrefab, position, Quaternion.identity);
+            _gameState.players[i] = Instantiate(characterPrefabs[i], position, Quaternion.identity);
             _gameState.players[i].tag = "player" + (i + 1);
             _gameState.players[i].name = "player" + (i + 1);
             _gameState.players[i].id = (i + 1);
@@ -104,7 +104,6 @@ public class GameManager : MonoBehaviour
                     controller = playerController;
                     UpdateLoop.AddListener(controller.ExecuteActions);
                     FixedUpdateLoop.AddListener(controller.CustomFixedUpdate);
-                    playerController.isPlayerOne = i == 0;
                     controller.id = i + 1;
                     break;
                 case PlayerType.random:
