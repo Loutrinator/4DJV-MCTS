@@ -38,6 +38,7 @@ public class Character : MonoBehaviour
     [Range(0, .3f)] [SerializeField] private float _movementSmoothing = .05f;
     private Rigidbody2D _body;
     private Vector3 _velocity = Vector3.zero;
+    private Vector3 _acceleration = Vector3.zero;
     private bool _flip;
     
     [Header("Animation")]
@@ -95,14 +96,18 @@ public class Character : MonoBehaviour
     {
         Debug.Log("isJumping : " + isJumping);
         if(_isDead) return;
-        transform.position += _velocity;
-        Vector3 targetVelocity = new Vector2(movement * Time.deltaTime * _speed, _body.velocity.y);
-        _body.velocity = Vector3.SmoothDamp(_body.velocity, targetVelocity, ref _velocity, _movementSmoothing);
+//        Vector3 targetVelocity = new Vector2(movement * Time.deltaTime * _speed, _body.velocity.y);
+  //      _body.velocity = Vector3.SmoothDamp(_body.velocity, targetVelocity, ref _velocity, _movementSmoothing);
+         _velocity = SimulatedPhysic.MoveTo(transform.position, new Vector2(movement * _speed, _velocity.y));
+         _velocity += _acceleration;
+         transform.position += (_velocity + .5f * _acceleration);
         _animator.SetBool("isRunning", movement!=0);
         if (movement > 0 && _flip) Flip();
         else if (movement < 0 && !_flip) Flip();
         Crouch(isCrouching);
         if (isJumping) Jump();
+        else _acceleration.y = 0f;
+        _acceleration = Vector3.zero;
 
     }
 
@@ -110,7 +115,8 @@ public class Character : MonoBehaviour
     {
         if(!_isGrounded) return;
         Debug.Log("Jump");
-        _body.AddForce(new Vector2(0f, _jumpForce));
+       // _body.AddForce(new Vector2(0f, _jumpForce));
+        _acceleration.y = -_jumpForce;
         _animator.SetBool("isJumping", true);
         _isInTheAir = true;
         _jumpSFX.Play();
