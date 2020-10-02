@@ -31,8 +31,8 @@ public class RandomController : AController
             }
             case 3:
             {
-                var r = Random.Range(0, 3);
-                _thrust = (Thrust) r;
+                var r = Random.Range(0, 2) != 0;
+                _attack = r;
                 break;
             }
         }

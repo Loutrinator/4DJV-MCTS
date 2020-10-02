@@ -3179,16 +3179,21 @@ MonoBehaviour:
   FixedUpdateLoop:
     m_PersistentCalls:
       m_Calls: []
-  characterPrefab: {fileID: 1126249371141353877, guid: 69593956d356fc043abed428bab1a65e,
-    type: 3}
+  AILoop:
+    m_PersistentCalls:
+      m_Calls: []
+  AILoopFrequency: 5
+  characterPrefabs:
+  - {fileID: 1816661190914619238, guid: 331507716033a9e4b9d23e9a376637fc, type: 3}
+  - {fileID: 1816661190914619238, guid: 331507716033a9e4b9d23e9a376637fc, type: 3}
   _nbPlayers: 2
-  players: []
   playerTypes: 
   spawnPoints:
   - {x: -2.4631018e+18, y: 5.56e-43, z: 1.487314e+20}
   - {x: 1.2053124e+13, y: 7.333218e+30, z: 5.55e-43}
   lowBeep: {fileID: 1878564777}
   highBeep: {fileID: 1878564776}
+  currentLevel: {fileID: 0}
 --- !u!4 &1878564775
 Transform:
   m_ObjectHideFlags: 0
@@ -3197,7 +3202,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1878564773}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.8723625, y: -10.148708, z: -239.40813}
+  m_LocalPosition: {x: 0, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
