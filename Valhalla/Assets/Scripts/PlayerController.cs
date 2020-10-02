@@ -8,7 +8,7 @@ public class PlayerController : AController
    public override void ExecuteActions()
     {
         if( _isDead || GameManager.IsPaused) return;
-        if (_character.id == 1)
+        if (_character.data.id == 1)
         {
             _direction = Input.GetAxis("Horizontal");
             if (Input.GetButtonDown("Jump")){_isJumping = true;}

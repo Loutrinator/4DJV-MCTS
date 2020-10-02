@@ -34,8 +34,10 @@ public class GameManager : MonoBehaviour
     public AudioSource highBeep;
 
     public LevelManager currentLevel;
+    public float dampening;
     #endregion
 
+    
     #region Overriden functions
 
     private void Awake()
@@ -74,7 +76,7 @@ public class GameManager : MonoBehaviour
     private void CallAILoop()
     {
         if(IsPaused) return;
-        print("AI LOOP");
+        //print("AI LOOP");
         AILoop?.Invoke();
     }
 
@@ -85,7 +87,8 @@ public class GameManager : MonoBehaviour
     public bool InitGame(LevelManager level) //returns true if the game properly initialised
     {
         currentLevel = level;
-        
+        _gameState.levelColliders = currentLevel.levelColliders;
+        SimulatedPhysic.gameState = _gameState;
         if (_gameState.players.Length != playerTypes.Length) return false;
         
         for(int i = 0; i < _gameState.players.Length; ++i)
@@ -95,7 +98,8 @@ public class GameManager : MonoBehaviour
             _gameState.players[i] = Instantiate(characterPrefabs[i], position, Quaternion.identity);
             _gameState.players[i].tag = "player" + (i + 1);
             _gameState.players[i].name = "player" + (i + 1);
-            _gameState.players[i].id = (i + 1);
+            _gameState.players[i].data.id = (i + 1);
+            if(i == 1) _gameState.players[i].Flip();
             AController controller;
             switch (playerTypes[i])
             {

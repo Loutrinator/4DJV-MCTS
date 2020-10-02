@@ -188,15 +188,15 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1126249371141353876}
-  m_BodyType: 0
+  m_BodyType: 2
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 5
-  m_Material: {fileID: 6200000, guid: fee69bed6d94943478817462b292e712, type: 2}
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 1
@@ -249,8 +249,8 @@ MonoBehaviour:
   _swordColliderRange: {x: 1, y: 0.1}
   _standingCollider: {fileID: 1126249371141353875}
   _isInTheAir: 0
-  _jumpForce: 800
-  _speed: 500
+  _jumpForce: 20
+  _speed: 5
   _movementSmoothing: 0.05
   OnDie:
     m_PersistentCalls:
@@ -259,7 +259,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   _showDebug: 1
-  id: 0
 --- !u!82 &7643077214563561725
 AudioSource:
   m_ObjectHideFlags: 0

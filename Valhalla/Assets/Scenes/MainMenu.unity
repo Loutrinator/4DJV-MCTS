@@ -3194,6 +3194,7 @@ MonoBehaviour:
   lowBeep: {fileID: 1878564777}
   highBeep: {fileID: 1878564776}
   currentLevel: {fileID: 0}
+  dampening: 20
 --- !u!4 &1878564775
 Transform:
   m_ObjectHideFlags: 0
