@@ -24,7 +24,7 @@ public class Character : MonoBehaviour
     [SerializeField] private Transform _seekCeiling = null;
     [SerializeField] private Transform _seekAttackCollision = null;
     [SerializeField] private Vector2 _swordColliderRange = Vector2.one;
-    [SerializeField] private Collider2D _standingCollider = null;
+    [SerializeField] private BoxCollider2D _standingCollider = null;
     private bool _isGrounded;
     private bool _isCeilingColliding;
     private bool _isAttackCollidingAnotherPlayer;
@@ -107,7 +107,8 @@ public class Character : MonoBehaviour
             acceleration = Jump(isJumping, acceleration);
         }
         
-        data.transform = SimulatedPhysic.Move(data.transform, acceleration, Time.fixedDeltaTime);
+        data.transform = SimulatedPhysic.Move(data.transform,_standingCollider, acceleration, Time.fixedDeltaTime);
+        //data.transform = SimulatedPhysic.Move(data.transform, acceleration, Time.fixedDeltaTime);
         transform.position = new Vector3(data.transform.position.x,data.transform.position.y);
         
         _animator.SetBool("isRunning", movement!=0);
@@ -153,7 +154,7 @@ public class Character : MonoBehaviour
         }
 
         _animator.SetBool("isCrouching", isCrouching);
-        _standingCollider.enabled = !isCrouching;
+        //_standingCollider.enabled = !isCrouching;
     }
 
     #endregion

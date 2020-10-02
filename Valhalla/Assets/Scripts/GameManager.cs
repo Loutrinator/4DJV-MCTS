@@ -87,7 +87,8 @@ public class GameManager : MonoBehaviour
     public bool InitGame(LevelManager level) //returns true if the game properly initialised
     {
         currentLevel = level;
-        
+        _gameState.levelColliders = currentLevel.levelColliders;
+        SimulatedPhysic.gameState = _gameState;
         if (_gameState.players.Length != playerTypes.Length) return false;
         
         for(int i = 0; i < _gameState.players.Length; ++i)

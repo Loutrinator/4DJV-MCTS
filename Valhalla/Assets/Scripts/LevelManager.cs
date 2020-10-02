@@ -10,6 +10,7 @@ public class LevelManager : MonoBehaviour
     [Tooltip("counting the number of rooms for one side including the middle room.")] public int nbRooms = 5; 
     [SerializeField] private CameraPanningController camera;
     
+    public BoxCollider2D[] levelColliders;
     void Start()
     {
         SetSpawnPoints();
