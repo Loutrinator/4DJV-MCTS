@@ -70,4 +70,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf8b0ae148530f945ace6ccda5c9ad79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerAttached: 0
+  playerAttached: 1
+  winScreen: {fileID: 0}

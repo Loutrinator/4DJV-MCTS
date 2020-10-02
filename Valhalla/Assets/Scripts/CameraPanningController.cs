@@ -77,19 +77,24 @@ public class CameraPanningController : MonoBehaviour
 
     public void OnDrawGizmos()
     {
-	    float sens = GameManager.Instance.Direction;
-	    Gizmos.color = Color.blue;
-	    Vector3 pos = this.transform.position + Vector3.right * sens * cameraMovingDistance / 2;
-	    pos.z = 0;
-	    Vector3 a = pos;
-	    Vector3 b = pos;
-	    a.y = -5;
-	    b.y = 5;
-	    Gizmos.DrawLine(a,b);
-	    Gizmos.color = Color.yellow;
-	    a.x += sens * detectionRange;
-	    b.x += sens * detectionRange;
-	    Gizmos.DrawLine(a,b);
+	    try
+	    {
+		    float sens = GameManager.Instance.Direction;
+		    Gizmos.color = Color.blue;
+		    Vector3 pos = this.transform.position + Vector3.right * sens * cameraMovingDistance / 2;
+		    pos.z = 0;
+		    Vector3 a = pos;
+		    Vector3 b = pos;
+		    a.y = -5;
+		    b.y = 5;
+		    Gizmos.DrawLine(a,b);
+		    Gizmos.color = Color.yellow;
+		    a.x += sens * detectionRange;
+		    b.x += sens * detectionRange;
+		    Gizmos.DrawLine(a,b);
+	    }
+	    catch(NullReferenceException e){}
+
 
     }
 }
