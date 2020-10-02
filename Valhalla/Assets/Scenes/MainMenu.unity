@@ -3185,7 +3185,7 @@ MonoBehaviour:
   AILoopFrequency: 5
   characterPrefabs:
   - {fileID: 1816661190914619238, guid: 331507716033a9e4b9d23e9a376637fc, type: 3}
-  - {fileID: 1816661190914619238, guid: 331507716033a9e4b9d23e9a376637fc, type: 3}
+  - {fileID: 1816661190914619238, guid: ad3a6170ead1a674aa2acb05d989ecdb, type: 3}
   _nbPlayers: 2
   playerTypes: 
   spawnPoints:
