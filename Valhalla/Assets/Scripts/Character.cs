@@ -35,10 +35,10 @@ public class Character : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float _jumpForce = 400f;
     [SerializeField] private float _speed = 10f;
+    
     [Range(0, .3f)] [SerializeField] private float _movementSmoothing = .05f;
     private Rigidbody2D _body;
-    private Vector3 _velocity = Vector3.zero;
-    private Vector3 _acceleration = Vector3.zero;
+    public PlayerData data;
     private bool _flip;
     
     [Header("Animation")]
@@ -50,8 +50,6 @@ public class Character : MonoBehaviour
     
     [Header("Debug")]
     [SerializeField] private bool _showDebug = true;
-
-    public int id;
     private bool _isDead;
     
     #endregion
@@ -63,6 +61,11 @@ public class Character : MonoBehaviour
         _body = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _flip = false;
+    }
+    private void Start()
+    {
+        data.transform.position = transform.position;
+        data.transform.velocity = Vector2.zero;
     }
 
     private void FixedUpdate()
@@ -94,37 +97,48 @@ public class Character : MonoBehaviour
 
     public void Move(float movement, bool isCrouching, bool isJumping)
     {
-        Debug.Log("isJumping : " + isJumping);
+        //Debug.Log("isJumping : " + isJumping);
         if(_isDead) return;
-//        Vector3 targetVelocity = new Vector2(movement * Time.deltaTime * _speed, _body.velocity.y);
-  //      _body.velocity = Vector3.SmoothDamp(_body.velocity, targetVelocity, ref _velocity, _movementSmoothing);
-         _acceleration.x = _speed*movement*SimulatedPhysic.deltaTime;
-         // -- movement equation --------------------------------    
-         _velocity += _acceleration;
-         transform.position += (_velocity*SimulatedPhysic.deltaTime + .5f * _acceleration);
-         // -----------------------------------------------------
+
+        Vector2 acceleration = movement * _speed * Vector2.right;
+        if (isJumping)
+        {
+            Debug.Log("CA SAUTE PAR ICI");
+            acceleration = Jump(isJumping, acceleration);
+        }
+        
+        data.transform = SimulatedPhysic.Move(data.transform, acceleration, Time.fixedDeltaTime);
+        transform.position = new Vector3(data.transform.position.x,data.transform.position.y);
+        
         _animator.SetBool("isRunning", movement!=0);
         if (movement > 0 && _flip) Flip();
         else if (movement < 0 && !_flip) Flip();
+        
         Crouch(isCrouching);
-        if (isJumping) Jump();
-        else _acceleration.y = 0f;
-        _acceleration = Vector3.zero;
 
     }
-
-    private void Jump()
+    
+    private Vector2 Jump(bool isJumping, Vector2 currentAcceleration)
     {
-        if(!_isGrounded) return;
-        Debug.Log("Jump");
-       // _body.AddForce(new Vector2(0f, _jumpForce));
-        _acceleration.y = -_jumpForce;
+        if (!_isGrounded)
+        {
+            
+            Debug.Log("PAS DE SOL PAS DE CHOCOLAT");
+            return currentAcceleration;
+        }
+        
+        Debug.Log("ENVOLE TOI PETIT OISEAU");
+        
+        currentAcceleration += _jumpForce * Vector2.up;
+        
         _animator.SetBool("isJumping", true);
         _isInTheAir = true;
         _jumpSFX.Play();
+        
+        return currentAcceleration;
     }
 
-    private void Flip()
+    public void Flip()
     {
         _flip = !_flip;
         transform.localScale = new Vector3(-1*transform.localScale.x,transform.localScale.y,transform.localScale.z);
@@ -213,7 +227,7 @@ public class Character : MonoBehaviour
     {
         _isDead = true;
         _animator.SetBool("isDead",true);
-        GameManager.Instance.PlayerDied(id);
+        GameManager.Instance.PlayerDied(data.id);
         OnDie?.Invoke();
         if(_isDead) _hurtSFX.Play();
         yield return new WaitForSeconds(1f);
