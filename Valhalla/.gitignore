@@ -22,6 +22,9 @@
 # Visual Studio cache directory
 .vs/
 
+# Riders directory
+.idea/
+
 # Gradle cache directory
 .gradle/
 
@@ -58,7 +61,3 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
-
-Valhalla/.idea/.idea.Valhalla/.idea/
-
-Valhalla/.idea/.idea.Valhalla/

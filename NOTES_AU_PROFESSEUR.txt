@@ -1,0 +1,5 @@
+Nous n'avons pas eu le temps d'implémenter la simulation de MCTS car nous n'avons pas totalement 
+fini de réimplémenter la physique sans le moteur unity. Cependant voici la liste de ce qui a était fait :
+
+- déplacements et saut des joueurs avec une gravité customisé
+- détection des collisions et peut reculer le sprite si il est déjà rentrer dans l'objet qu'il collide
