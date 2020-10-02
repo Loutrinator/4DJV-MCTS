@@ -63,7 +63,12 @@ public class MainMenuManager : MonoBehaviour
     
     public void QuitGame()
     {
-        Application.Quit();
+       // save any game data here
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+         Application.Quit();
+#endif
     }
 
     public void SetPlayer1Player(){playerTypes[0] = PlayerType.player;}
