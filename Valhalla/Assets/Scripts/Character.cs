@@ -95,6 +95,7 @@ public class Character : MonoBehaviour
     {
         Debug.Log("isJumping : " + isJumping);
         if(_isDead) return;
+        transform.position += _velocity;
         Vector3 targetVelocity = new Vector2(movement * Time.deltaTime * _speed, _body.velocity.y);
         _body.velocity = Vector3.SmoothDamp(_body.velocity, targetVelocity, ref _velocity, _movementSmoothing);
         _animator.SetBool("isRunning", movement!=0);
